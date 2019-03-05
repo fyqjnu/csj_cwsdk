@@ -1,7 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.butterknife'
 
+
+
 android {
+
     compileSdkVersion 26
     buildToolsVersion "28.0.3"
 
@@ -16,9 +19,15 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            /**/
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),'proguard-rules.pro'
         }
+    }
+}
+repositories {
+    flatDir {
+        dirs "libs"
     }
 }
 
@@ -27,8 +36,12 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile(name: 'open_ad_sdk', ext: 'aar')
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+    compile files('libs/android-query-full.0.26.7.jar')
     compile 'com.jakewharton:butterknife:8.5.1'
     compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

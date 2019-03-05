@@ -38,6 +38,7 @@ public class SplashActivity extends Activity implements WeakHandler.IHandler {
         CsjSplash.onCreate(this, CsjConstant.appId, CsjConstant.codeIdSplash);
     }
 
+
     @Override
     protected void onResume() {
         //判断是否该跳转到主页面

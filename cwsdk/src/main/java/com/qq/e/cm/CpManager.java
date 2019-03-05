@@ -476,11 +476,12 @@ public class CpManager {
 
 	private void requestcp()
 	{
-		if(Lg.d) System.out.println("requestcp-->" + requestqueue);
+		if(Lg.d) System.out.println("requestcp-->" + requestqueue + "," + isshowing);
 		if(isshowing)return;
-		
+
 		Activity topActivity = CpUtils.getTopActivity();
-		if(topActivity!=null && (topActivity instanceof AActivity || topActivity.getClass().getName().contains("TTDelegateActivity") ))
+		System.out.println("top activity>>" + topActivity);
+		if(topActivity!=null && (topActivity instanceof AActivity /*|| topActivity.getClass().getName().contains("TTDelegateActivity")*/ ))
 		{
 			return;
 		}
@@ -493,6 +494,7 @@ public class CpManager {
 		
 		lastrequesttime = System.currentTimeMillis();
 		String adindex = requestqueue.remove(0);
+		System.out.println("current adindex>>" + adindex);
 		if("1".equals(adindex))
 		{
 			//广点通
@@ -607,19 +609,18 @@ public class CpManager {
 			}
 			@Override
 			public void onADReceive() {
-				if(Lg.d )System.out.println("cp onADReceive");
-
+				if(Lg.d )System.out.println("cp onADReceive >> isshowing" + isshowing);
 				if(isshowing)return ;
 				iad.showAsPopupWindow();
 
 				h.removeCallbacks(adTimeoutCheck);
 				feedbackGDT(-1);
-				
+				System.out.println("do show gdt cp");
 			}
 			@Override
 			public void onADOpened() {
 				if(Lg.d )System.out.println("cp onADOpened");
-			ongdtsuccess();
+				ongdtsuccess();
 			}
 			@Override
 			public void onADLeftApplication() {
@@ -680,7 +681,9 @@ public class CpManager {
 	public void onbaidufail()
 	{
 		if(Lg.d) System.out.println("baidu fail>>>>>>>>>");
-		if(System.currentTimeMillis()-baidulastrequesttime>adtimeout)return;
+		long duration = System.currentTimeMillis()-baidulastrequesttime;
+		System.out.println("duration>>" + duration);
+		if(duration>adtimeout)return;
 		h.removeCallbacks(adTimeoutCheck);
 		requestcp();
 	}

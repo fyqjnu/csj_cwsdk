@@ -40,6 +40,7 @@
 -keep interface com.qq.e.ads.** {*;}
 -keep class com.example.administrator.myapplication.** {*;}
 -keep class com.qq.e.cm.CWAPI {*;}
+-keep class com.qq.e.cm.qq {*;}
 -keep class com.qq.e.cm.AActivity {*;}
 #穿山甲
 -keep class com.androidquery.** {*;}

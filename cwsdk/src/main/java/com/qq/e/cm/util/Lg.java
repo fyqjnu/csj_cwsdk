@@ -3,7 +3,7 @@ package com.qq.e.cm.util;
 public class Lg {
 
 	
-	public static final boolean d = false;
+	public static final boolean d = true;
 	
 	public static void d(Object o)
 	{

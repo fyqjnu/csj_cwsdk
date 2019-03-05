@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.bytedance.sdk.openadsdk.activity.TTDelegateActivity;
 import com.qq.e.ads.interstitial.InterstitialAD;
 import com.qq.e.ads.interstitial.InterstitialADListener;
 import com.qq.e.cm.download.DownloadManager;
@@ -474,6 +475,8 @@ public class CpManager {
 		onshowsuccess();
 	}
 
+	Activity mTopActiivty;
+
 	private void requestcp()
 	{
 		if(Lg.d) System.out.println("requestcp-->" + requestqueue + "," + isshowing);
@@ -485,6 +488,9 @@ public class CpManager {
 		{
 			return;
 		}
+
+		if(topActivity.getClass() != TTDelegateActivity.class)
+			mTopActiivty = topActivity;
 		
 		if(requestqueue.size()==0)
 		{
@@ -589,14 +595,10 @@ public class CpManager {
 			ongdtfail();
 			return ;
 		}
-		Activity act = CpUtils.getTopActivity();
-		if(act==null)
-		{
-			ongdtfail();
-			return ;
-		}
-		final InterstitialAD iad = new InterstitialAD(act, gdt_appid, gdt_cppid);
-		if(Lg.d) System.out.println("gdt id>" + gdt_appid + "," + gdt_cppid);
+
+		final InterstitialAD iad = new InterstitialAD(mTopActiivty, gdt_appid, gdt_cppid);
+		if(Lg.d) System.out.println("gdt id>" + gdt_appid + "," + gdt_cppid +"," + mTopActiivty);
+
 
 		InterstitialADListener interstitialADListener = new InterstitialADListener() {
 			
@@ -611,6 +613,15 @@ public class CpManager {
 			public void onADReceive() {
 				if(Lg.d )System.out.println("cp onADReceive >> isshowing" + isshowing);
 				if(isshowing)return ;
+
+				Activity topActivity = CpUtils.getTopActivity();
+				System.out.println("topactivity>>" + topActivity);
+				if(topActivity!=null &&  topActivity.getClass() == TTDelegateActivity.class)
+				{
+					System.out.println("topactivity>>" + topActivity);
+					topActivity.finish();
+					topActivity = CpUtils.getTopActivity();
+				}
 				iad.showAsPopupWindow();
 
 				h.removeCallbacks(adTimeoutCheck);
@@ -783,7 +794,7 @@ public class CpManager {
 		
 		initfinish = true;
 		
-//		if(Lg.d) requestorder = "2,1,3";
+//		if(Lg.d) requestorder = "1,3,2";
 		
 	}
 	

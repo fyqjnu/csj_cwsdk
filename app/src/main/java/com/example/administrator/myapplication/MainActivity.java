@@ -2,8 +2,9 @@ package com.example.administrator.myapplication;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.qq.e.cm.CWAPI;
 
@@ -14,10 +15,16 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         FrameLayout container = new FrameLayout(this);
-        TextView tv = new TextView(this);
+        Button tv = new Button(this);
         tv.setText("hello");
         setContentView(container);
         container.addView(tv);
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("xxxxxxxxxx");
+            }
+        });
 /*
 
         String name = Go.getname();

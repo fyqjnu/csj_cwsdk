@@ -52,7 +52,7 @@ public class HttpManager {
 	
 	
 	//玩咖6
-	public static int advertId = Lg.d?7:-1;
+	public static int advertId = -1;
 	
 	public static void init(Context ctx)
 	{

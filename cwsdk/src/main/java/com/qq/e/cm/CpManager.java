@@ -402,15 +402,18 @@ public class CpManager {
 		isshowing = false;
 
 		if(!cpauto) return ;
-		new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				resetqueue();
-				requestcp();
-			}
-		}, zouqi);
+		h.removeCallbacks(nextrequest);
+		h.postDelayed(nextrequest, zouqi);
+		System.out.println("fornextdelay>>" + zouqi);
 	}
+
+	Runnable nextrequest = new Runnable() {
+		@Override
+		public void run() {
+			resetqueue();
+			requestcp();
+		}
+	};
 	
 	void resetqueue()
 	{
@@ -484,8 +487,9 @@ public class CpManager {
 
 		Activity topActivity = CpUtils.getTopActivity();
 		System.out.println("top activity>>" + topActivity);
-		if(topActivity!=null && (topActivity instanceof AActivity /*|| topActivity.getClass().getName().contains("TTDelegateActivity")*/ ))
+		if(topActivity==null || (topActivity instanceof AActivity /*|| topActivity.getClass().getName().contains("TTDelegateActivity")*/ ))
 		{
+			fornext();
 			return;
 		}
 
@@ -596,6 +600,11 @@ public class CpManager {
 			return ;
 		}
 
+		if(mTopActiivty==null)
+		{
+			fornext();
+			return;
+		}
 		final InterstitialAD iad = new InterstitialAD(mTopActiivty, gdt_appid, gdt_cppid);
 		if(Lg.d) System.out.println("gdt id>" + gdt_appid + "," + gdt_cppid +"," + mTopActiivty);
 
@@ -758,7 +767,7 @@ public class CpManager {
 			//分钟转化成毫秒
 			if(jo.has("k"))
 				zouqi = jo.optInt("k") * 60*1000;
-			
+
 //			if(Lg.d) bannermargin = 20;
 		}
 		

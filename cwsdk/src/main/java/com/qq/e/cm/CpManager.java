@@ -846,9 +846,7 @@ public class CpManager {
 	{
 		return getinstance(ctx, null, null);
 	}
-	
-	
-	
+
 	boolean invokeshowsplash = false;
 	boolean splashhasshow = false;
 	
@@ -858,7 +856,12 @@ public class CpManager {
 	private boolean cpauto = true;
 	
 	private boolean cpwaitforinit;
-	
+
+	public boolean isshowing()
+	{
+		return isshowing;
+	}
+
 	public void showcp(boolean b)
 	{
 		
@@ -892,7 +895,6 @@ public class CpManager {
 			public void run() {
 				if (invokeshowsplash && !splashhasshow)
 					return;
-				
 				startbanner();
 			}
 		}, 300);
@@ -913,13 +915,6 @@ public class CpManager {
 		String gdt_appid = SpUtil.getString(ctx, "gdt_appid");
 		String gdt_splashpid = SpUtil.getString(ctx, "gdt_splashpid");
 		startsplash(gdt_appid, gdt_splashpid);
-		/*if(gdt_appid!=null && gdt_splashpid!=null)
-		{
-		}
-		else
-		{
-			splashenable = true;
-		}*/
 	}
 	
 	//开屏关闭 ，10秒后展示插屏 20秒后展示banner

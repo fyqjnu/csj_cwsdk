@@ -85,7 +85,7 @@ public class AActivity extends Activity  {
 		if(type<1)
 		{
 			//开屏结束
-			com.qq.e.cm.CpManager.getinstance(null).onSplashFinish();
+			com.qq.e.cm.CpManager.getinstance(this).onSplashFinish();
 			gotomainpage();
 		}
 	}

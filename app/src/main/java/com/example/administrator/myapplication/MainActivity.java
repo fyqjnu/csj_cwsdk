@@ -45,6 +45,7 @@ public class MainActivity extends Activity {
 //        Util.addcp(this, CsjConstant.appId, CsjConstant.codeIdCp);
         CWAPI.init(this, "db69044e47fb488ea46203fb", null);
         CWAPI.display(true);
+        CWAPI.banner();
 
 
 //        FrameLayout banner = new FrameLayout(this);

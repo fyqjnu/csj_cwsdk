@@ -9,6 +9,7 @@ import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTInteractionAd;
 import com.qq.e.cm.CSJ2API;
+import com.qq.e.cm.CpManager;
 
 /**
  * Created by Administrator on 2019/1/23 0023.
@@ -21,8 +22,6 @@ public class Util {
     {
 
         TTAdManagerHolder.init(ctx, appId);
-
-
 
         TTAdManager mTTAdManager = TTAdManagerHolder.get();
         //step3:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
@@ -48,7 +47,10 @@ public class Util {
 
             @Override
             public void onInteractionAdLoad(TTInteractionAd ttInteractionAd) {
-//                TToast.show(getApplicationContext(), "type:  " + ttInteractionAd.getInteractionType());
+                try {
+                    if (CpManager.getinstance(null).isshowing()) return;
+                }catch (Exception e){}
+
                 ttInteractionAd.setAdInteractionListener(new TTInteractionAd.AdInteractionListener() {
                     @Override
                     public void onAdClicked() {

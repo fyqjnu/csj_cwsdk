@@ -15,14 +15,13 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.qq.e.ads.banner.ADSize;
+import com.qq.e.ads.banner.BannerADListener;
+import com.qq.e.ads.banner.BannerView;
 import com.qq.e.cm.MyBanner.MyBannerListener;
 import com.qq.e.cm.http.HttpManager;
 import com.qq.e.cm.util.CpUtils;
 import com.qq.e.cm.util.Lg;
-import com.qq.e.ads.banner.ADSize;
-import com.qq.e.ads.banner.BannerADListener;
-import com.qq.e.ads.banner.BannerView;
-import com.qq.e.cm.API2CSJ;
 import com.qq.e.comm.util.AdError;
 
 import java.util.ArrayList;
@@ -31,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BannerManager {
+	//广告超时
+	static long adtimeout = 5000;
 	
 	final static String gdt = "1";
 	final static String api = "2";
@@ -201,15 +202,7 @@ public class BannerManager {
 		
 
 		private int sw;
-		Runnable oneminutecheck = new Runnable() {
-			
-			@Override
-			public void run() {
-				resetqueue();
-				requestbanner();
-			}
-		};		
-		
+
 		BannerTask(Activity act, String order) {
 			this.act = act;
 			this.requestorder = order;
@@ -318,12 +311,6 @@ public class BannerManager {
 		}
 
 		
-		void clearCallback()
-		{
-			handler.removeCallbacks(next);
-			handler.removeCallbacks(oneminutecheck);
-		}
-		
 		void onshowsuccess()
 		{
 			if(Lg.d) System.out.println("banner show success");
@@ -331,25 +318,6 @@ public class BannerManager {
 			fl.requestLayout();
 			fl.invalidate();
 			
-			clearCallback();
-			
-			/*
-			fl.removeView(parent);
-			pw.dismiss();
-			initpw(act);
-			pw.setContentView(parent);
-			int x = (sw-w)/2;
-			int pos = getposition();
-			if(pos==0)
-			{
-				pw.showAtLocation(fl, Gravity.BOTTOM|Gravity.LEFT, x, 0);
-			}
-			else
-			{
-				int y = CpUtils.dip2px(act, 20);
-				pw.showAtLocation(fl, Gravity.TOP|Gravity.LEFT, x, y);
-			}
-			*/
 		}
 		
 		//点击关闭
@@ -470,6 +438,15 @@ public class BannerManager {
 			b.listener = this;
 			doshowbanner(b);
 		}
+
+		//广告超时检测
+		Runnable adtimeoutcheck = new Runnable() {
+			@Override
+			public void run() {
+				if(isshow) return ;
+				requestbanner();
+			}
+		};
 		
 		void requestgdt()
 		{
@@ -505,16 +482,17 @@ public class BannerManager {
 				
 				@Override
 				public void onADExposure() {
+					if(isshow) return;
 					//展示状态
+					handler.removeCallbacks(adtimeoutcheck);
 					feedbackgdt(0);
 					ongdtsuccess();
-					if(Lg.d) Lg.d("onADExposure--------------");
+					if(Lg.d) Lg.d("gdt banner 展示");
 				}
 				
 				@Override
 				public void onADClosed() {
 					removeview(gdt);
-					isshow = false;
 					fornext();
 				}
 				
@@ -524,74 +502,29 @@ public class BannerManager {
 				
 				@Override
 				public void onADClicked() {
+					System.out.println("gdt banner点击");
 					feedbackgdt(1);
 				}
 			});
 			
 			doshowbanner(gdt);
 			gdt.loadAD();
+			//请求状态返回
 			feedbackgdt(-2);
+
+			handler.removeCallbacks(adtimeoutcheck);
+			handler.postDelayed(adtimeoutcheck, adtimeout);
 		}
 		
 		void requestbaidu()
 		{
-			/*if(Lg.d) Lg.d("requestbaidu banner>" + bd_appid + "," + bd_bannerid);
-			if(TextUtils.isEmpty(bd_appid))
-			{
-				onbaidufail(null);
-				return;
-			}
-			
-			AdView.setAppSid(act, bd_appid);
-			
-			final AdView baidu = new AdView(act, bd_bannerid);
-			baidu.setListener(new AdViewListener() {
-				
-				@Override
-				public void onAdSwitch() {
-					
-				}
-				
-				@Override
-				public void onAdShow(JSONObject arg0) {
-					if(Lg.d) Lg.d("baidu banner show>" + arg0);
-					feedbackbaidu(0);
-					onbaidusuccess();
-					
-				}
-				
-				@Override
-				public void onAdReady(AdView arg0) {
-					feedbackbaidu(-1);
-					if(Lg.d) Lg.d("baidu banner ready");
-				}
-				
-				@Override
-				public void onAdFailed(String arg0) {
-					onbaidufail(baidu);
-					if(Lg.d) Lg.d("baidu banner fail>" + arg0);
-				}
-				
-				@Override
-				public void onAdClose(JSONObject arg0) {
-					removeview(baidu);
-					isshow = false;
-					fornext();
-				}
-				
-				@Override
-				public void onAdClick(JSONObject arg0) {
-					feedbackbaidu(1);
-				}
-			});*/
-			
 			if(TextUtils.isEmpty(bd_appid)||TextUtils.isEmpty(bd_bannerid))
 			{
 				onbaidufail(null);
 				return;
 			}
 			
-			System.out.println("请求穿山甲");
+			System.out.println("请求穿山甲banner");
 			FrameLayout baidu = new FrameLayout(act);
 			TextView tv = new TextView(act);
 			tv.setText(" ");
@@ -602,13 +535,11 @@ public class BannerManager {
 			doshowbanner(baidu);
 			//请求状态-2
 			feedbackbaidu(-2);
+
+			handler.removeCallbacks(adtimeoutcheck);
+			handler.postDelayed(adtimeoutcheck, adtimeout);
 		}
 		
-		
-		void setoneminutecheck(){
-			clearCallback();
-			handler.postDelayed(oneminutecheck, 60*1000);
-		}
 		
 		void requestbanner()
 		{
@@ -655,8 +586,7 @@ public class BannerManager {
 			
 			if(gdt_appid==null) requestqueue.remove(gdt);
 			if(bd_appid==null) requestqueue.remove(baidu);
-//			requestqueue.remove(api);
-			
+			/*
 			//改变顺序
 			if(lastrequesttime>0)
 			{
@@ -684,11 +614,9 @@ public class BannerManager {
 					String t = sb.toString();
 					requestorder = t.substring(0, t.length()-1);
 				}	
-			}
+			}*/
 		}
-		
-		
-		
+
 		Runnable next = new Runnable() {
 			
 			@Override
@@ -701,7 +629,8 @@ public class BannerManager {
 		
 		public void fornext()
 		{
-			clearCallback();
+			isshow = false;
+			handler.removeCallbacks(next);
 			handler.postDelayed(next, zouqi);
 		}
 		
@@ -737,7 +666,6 @@ public class BannerManager {
 		public void onclose(View v) {
 			if(Lg.d) Lg.d("api banner close");
 			removeview(v);
-			isshow = false;
 			fornext();
 		}
 

@@ -57,6 +57,7 @@ public class CsjBanner {
                 mBannerContainer.addView(bannerView);
                 System.out.println("width>>" + mBannerContainer.getWidth() + "," + mBannerContainer.getHeight());
                 //设置广告互动监听回调
+                CSJ2API.onCsjBannershow();
                 ad.setBannerInteractionListener(new TTBannerAd.AdInteractionListener() {
                     @Override
                     public void onAdClicked(View view, int type) {

@@ -40,10 +40,8 @@ public class MainActivity extends Activity {
             System.out.println("没有写权限");
         }*/
 
-
-
 //        Util.addcp(this, CsjConstant.appId, CsjConstant.codeIdCp);
-        CWAPI.init(this, "db69044e47fb488ea46203fb", null);
+        CWAPI.init(this, "b1b1679cbe4345aab5850e84", null);
         CWAPI.display(true);
         CWAPI.banner();
 

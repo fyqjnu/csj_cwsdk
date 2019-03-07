@@ -77,15 +77,15 @@ public class BannerManager {
 	//1表示 gdt, 3表示 百度
 	String requestorder = "2,1,3";
 	List<String> requestqueue = new ArrayList<String>();
-	
-	int zouqi = 120*1000;
+
+	//循环展示的周期 2分钟
+	int zouqi = 60*1000;
 	
 	HashMap<Activity, BannerTask> mapactbanner = new HashMap<Activity, BannerManager.BannerTask>();
 	
 	private BannerManager(Context ctx)
 	{
 		this.ctx = ctx;
-		
 	}
 	
 	static BannerManager ins;
@@ -129,8 +129,14 @@ public class BannerManager {
 	{
 		
 		Activity topActivity = CpUtils.getTopActivity();
-		if(topActivity==null)
+		if(topActivity==null || topActivity.getClass()==AActivity.class)
 		{
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					start();
+				}
+			}, 10*000);
 			return;
 		}
 		
@@ -152,6 +158,11 @@ public class BannerManager {
 		{
 			BannerTask t = new BannerTask(act, requestorder);
 			mapactbanner.put(act, t);
+			t.start();
+		}
+		else
+		{
+			BannerTask t = mapactbanner.get(act);
 			t.start();
 		}
 	}
@@ -271,7 +282,6 @@ public class BannerManager {
 		void start()
 		{
 			if(Lg.d) Lg.d("banner start---------------");
-			if(isshow) return;
 			resetqueue();
 			requestbanner();
 		}
@@ -310,14 +320,15 @@ public class BannerManager {
 			requestbanner();
 		}
 
-		
+		long lastshowsuccesstime;
+
 		void onshowsuccess()
 		{
 			if(Lg.d) System.out.println("banner show success");
 			isshow = true;
+			lastshowsuccesstime = System.currentTimeMillis();
 			fl.requestLayout();
 			fl.invalidate();
-			
 		}
 		
 		//点击关闭
@@ -543,14 +554,25 @@ public class BannerManager {
 		
 		void requestbanner()
 		{
-			if(isshow)return;
-			
+			Activity topActivity = CpUtils.getTopActivity();
+			if(topActivity==null || topActivity.getClass()==AActivity.class)
+			{
+				fornext();
+				return;
+			}
+
+			if(isshow && (System.currentTimeMillis()-lastshowsuccesstime+10*1000<3*60*1000)){
+				fornext();
+				return;
+			}
+
 			if(requestqueue.size()==0)
 			{
 				fornext();
 				return ;
 			}
-			
+			isshow = false;
+
 			if(System.currentTimeMillis() - lastrequesttime <59 *1000)
 			{
 				if(requestqueue.size() == requestorder.split(",").length)return;

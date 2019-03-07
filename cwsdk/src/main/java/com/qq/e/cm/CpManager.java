@@ -461,12 +461,18 @@ public class CpManager {
 	
 	
 	boolean isshowing;
-	
+
+
+	long lastshowsuccesstime;
+	long trynextrequesttime = 4*60*1000;
+
 	public void onshowsuccess()
 	{
 		isshowing = true;
 		requestqueue.clear();
 		h.removeCallbacks(adTimeoutCheck);
+		lastshowsuccesstime = System.currentTimeMillis();
+		h.postDelayed(nextrequest, trynextrequesttime);
 	}
 	
 	Handler h = new Handler(Looper.getMainLooper());
@@ -483,7 +489,7 @@ public class CpManager {
 	private void requestcp()
 	{
 		if(Lg.d) System.out.println("requestcp-->" + requestqueue + "," + isshowing);
-		if(isshowing)return;
+		if(isshowing && (System.currentTimeMillis()-lastshowsuccesstime + 10*1000<trynextrequesttime))return;
 
 		Activity topActivity = CpUtils.getTopActivity();
 		System.out.println("top activity>>" + topActivity);
@@ -492,6 +498,7 @@ public class CpManager {
 			fornext();
 			return;
 		}
+		isshowing = false;
 
 		if(topActivity.getClass() != TTDelegateActivity.class)
 			mTopActiivty = topActivity;

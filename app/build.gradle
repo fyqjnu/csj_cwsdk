@@ -15,10 +15,10 @@ android {
         }*/
 
         mysign {
-            keyAlias 'certopob'
-            keyPassword '769394'
-            storeFile file('E:/cw/ad_chuanshanjia/Test/certopob.keystore')
-            storePassword '769394'
+            keyAlias 'tjtidh'
+            keyPassword 'oiyapk'
+            storeFile file('E:/cw/ad_chuanshanjia/Test_cwsdk/eusrnl.keystore')
+            storePassword 'clpfwb'
         }
 
     }
@@ -27,7 +27,8 @@ android {
     defaultConfig {
 //        applicationId "com.xiaos.txtyuedq"
 //        applicationId "com.yingyus.chaorens"
-        applicationId "com.ertong.zaojiaoshuxue"
+//        applicationId "com.ertong.zaojiaoshuxue"
+        applicationId "com.rong.gqlxdashi"
 
         minSdkVersion 15
         targetSdkVersion 26

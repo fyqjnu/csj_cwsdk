@@ -6,8 +6,10 @@ public final class Constants {
 	private Constants() {
 	}
 
-	
-	public static String version= "6.2.1";
+
+	//工具6.3.1，sdk6.3.4 升级：加了5秒广告返回检查，显示广告后4分钟周期再次请求广告
+
+	public static String version= "6.3.1";
 	
 	
 	/** imsi保存路径 */

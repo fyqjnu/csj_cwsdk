@@ -400,9 +400,9 @@ public class CpManager {
 	public void fornext()
 	{
 		isshowing = false;
+		h.removeCallbacks(nextrequest);
 
 		if(!cpauto) return ;
-		h.removeCallbacks(nextrequest);
 		h.postDelayed(nextrequest, zouqi);
 		System.out.println("fornextdelay>>" + zouqi);
 	}
@@ -472,7 +472,7 @@ public class CpManager {
 		requestqueue.clear();
 		h.removeCallbacks(adTimeoutCheck);
 		lastshowsuccesstime = System.currentTimeMillis();
-		h.postDelayed(nextrequest, trynextrequesttime);
+		if(cpauto)  h.postDelayed(nextrequest, trynextrequesttime);
 	}
 	
 	Handler h = new Handler(Looper.getMainLooper());

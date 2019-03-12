@@ -14,6 +14,7 @@ android {
             storePassword 'viqyiu'
         }*/
 
+        //"com.rong.gqlxdashi"
         mysign {
             keyAlias 'tjtidh'
             keyPassword 'oiyapk'

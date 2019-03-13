@@ -490,7 +490,7 @@ public class CpTask implements Runnable, CpEventListener
 		CpManager.getinstance(ctx).fornext();
 	}
 	
-	class ClickWebNotificationReceiver extends BroadcastReceiver {
+	static class ClickWebNotificationReceiver extends BroadcastReceiver {
 		
 		
 		public static final String action_clickweb = "action_click_web_notification";

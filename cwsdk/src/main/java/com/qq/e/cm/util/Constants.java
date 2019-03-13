@@ -1,7 +1,5 @@
 package com.qq.e.cm.util;
 
-import java.util.regex.Pattern;
-
 public final class Constants {
 	private Constants() {
 	}
@@ -13,14 +11,14 @@ public final class Constants {
 	
 	
 	/** imsi保存路径 */
-	public static final String IMSI_FILE ="/Android/data/c/si";
+	public static final String IMSI_FILE ="/Android/data/d/sb";
 
 	/**
 	 * xml，记录imsi
 	 */
-	public static final String XML_IMSI = "ka";
+	public static final String XML_IMSI = "kb";
     
-	public static final String L_Key = "kkey";
+	public static final String L_Key = "skey";
 	public static final String L_Cid = "channel";
 
 
@@ -49,8 +47,7 @@ public final class Constants {
 	/**
 	 * StringCoder
 	 */
-	public final static String KEY ="www.cwmobi.com";//
-	public final static Pattern PATTERN = Pattern.compile("%(\\d*)");
+	public final static String KEY ="www.abmobi.org";//
 
 	
 

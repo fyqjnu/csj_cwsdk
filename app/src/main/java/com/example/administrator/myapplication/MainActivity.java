@@ -49,6 +49,8 @@ public class MainActivity extends Activity {
                         });
                     }
 
+
+                    //nginx 反向代理
                     @Override
                     public void onError(String msg) {
                         System.out.println("激励视频加载失败>>" + msg);

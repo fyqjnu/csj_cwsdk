@@ -779,6 +779,7 @@ public class CpManager {
 			if(jo.has("h2")) bd_cppid = jo.getString("h2");
 			if(jo.has("h3")) bd_bannerpid = jo.getString("h3");
 			if(jo.has("h4")) bd_splashpid = jo.getString("h4");
+			if(jo.has("h5")) bd_rewardid = jo.getString("h5");//激励视频id
 			
 			if(jo.has("g1")) requestorder = jo.getString("g1");
 			if(jo.has("g2")) bannerrequestorder = jo.getString("g2");

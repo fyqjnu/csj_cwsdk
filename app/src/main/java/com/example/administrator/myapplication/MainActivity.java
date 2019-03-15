@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.qq.e.cm.CWAPI;
+import com.qq.e.cm.RewardVideoLoadListener;
+import com.qq.e.cm.RewardVideoPlayListener;
 
 public class MainActivity extends Activity {
 
@@ -25,7 +27,33 @@ public class MainActivity extends Activity {
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("xxxxxxxxxx");
+                CWAPI.loadRewardVideo("x", "金币", 100, new RewardVideoLoadListener() {
+                    @Override
+                    public void onReady() {
+                        System.out.println("激励视频加载成功");
+                        CWAPI.showRewardVideo(MainActivity.this, new RewardVideoPlayListener() {
+                            @Override
+                            public void onVideoComplete() {
+                                System.out.println("激励视频播放完成");
+                            }
+
+                            @Override
+                            public void onVideoClosed() {
+                                System.out.println("激励视频关闭");
+                            }
+
+                            @Override
+                            public void onVideoShow() {
+                                System.out.println("激励视频开始播放");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        System.out.println("激励视频加载失败>>" + msg);
+                    }
+                });
             }
         });
 /*
@@ -45,7 +73,7 @@ public class MainActivity extends Activity {
 
 //        Util.addcp(this, CsjConstant.appId, CsjConstant.codeIdCp);
         CWAPI.init(this, "b1b1679cbe4345aab5850e84", null);
-        CWAPI.display(true);
+        CWAPI.display(false);
         CWAPI.banner();
 
 

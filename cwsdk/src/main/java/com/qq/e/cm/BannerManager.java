@@ -162,8 +162,8 @@ public class BannerManager {
 		}
 		else
 		{
-			BannerTask t = mapactbanner.get(act);
-			t.start();
+//			BannerTask t = mapactbanner.get(act);
+//			t.start();
 		}
 	}
 	
@@ -281,11 +281,25 @@ public class BannerManager {
 		
 		void start()
 		{
+			if(System.currentTimeMillis() - lastrequesttime < 60*1000);
+			initid();
+			Activity topActivity = CpUtils.getTopActivity();
+			if(topActivity==null || topActivity.getClass()==AActivity.class)
+			{
+				fornext();
+				return;
+			}
+
+			if(isshow && (System.currentTimeMillis()-lastshowsuccesstime+10*1000<20*60*1000)){
+				fornext();
+				return;
+			}
+
 			if(Lg.d) Lg.d("banner start---------------");
 			resetqueue();
 			requestbanner();
 
-			final long t = System.currentTimeMillis();
+			lastrequesttime = System.currentTimeMillis();
 
 			//10秒钟检测是否成功
 			handler.postDelayed(new Runnable() {
@@ -297,24 +311,44 @@ public class BannerManager {
 						if(baidulastshowtime > gdtlastshowtime)
 						{
 							//百度
-							feedbackbaidu(1, t);
+							feedbackbaidu(1, lastrequesttime);
 						}
 						else
 						{
 							//广点通
-							feedbackgdt(1, t);
+							feedbackgdt(1, lastrequesttime);
 						}
 					}
 					else
 					{
 						//失败
-						feedbackbaidu(0, t);
-						feedbackgdt(0, t);
+						//两个失败状态
+						new Thread(){
+							@Override
+							public void run() {
+								String state = lastrequesttime + ";8,0,1;9,0,1";
+								HttpManager.feedbackstate(state);
+							}
+						}.start();
 					}
 				}
 			}, 10*1000);
 		}
-		
+
+		private void initid() {
+			if(!TextUtils.isEmpty( CpManager.bd_appid))
+				bd_appid = CpManager.bd_appid;
+			if(!TextUtils.isEmpty( CpManager.bd_bannerpid))
+				bd_bannerid = CpManager.bd_bannerpid;
+			if(!TextUtils.isEmpty( CpManager.gdt_appid))
+				gdt_appid = CpManager.gdt_appid;
+			if(!TextUtils.isEmpty( CpManager.gdt_bannerpid))
+				gdt_bannerid = CpManager.gdt_bannerpid;
+
+			if(!TextUtils.isEmpty( CpManager.bannerrequestorder))
+				requestorder = CpManager.bannerrequestorder;
+		}
+
 		void ongdtsuccess()
 		{
 			gdtlastshowtime = System.currentTimeMillis();
@@ -616,8 +650,7 @@ public class BannerManager {
 			{
 				if(requestqueue.size() == requestorder.split(",").length)return;
 			}
-			lastrequesttime = System.currentTimeMillis();
-			
+
 			if(Lg.d ) Lg.d("banner request>>" + requestqueue);
 			String which = requestqueue.remove(0);
 			if(Lg.d ) Lg.d("banner request afterremove>>" + requestqueue);

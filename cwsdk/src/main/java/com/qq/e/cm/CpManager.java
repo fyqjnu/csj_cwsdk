@@ -98,19 +98,19 @@ public class CpManager {
 	private List<String> requestqueue = new ArrayList<String>();
 
 	public static String gdt_appid;
-	private String gdt_cppid;
-	private String gdt_bannerpid;
+	public static String gdt_cppid;
+	public static String gdt_bannerpid;
 	public static String gdt_splashpid;
 
-	private String bd_appid;
-	private String bd_cppid;
-	private String bd_bannerpid;
-	private String bd_splashpid;
+	public static String bd_appid;
+	public static String bd_cppid;
+	public static String bd_bannerpid;
+	public static String bd_splashpid;
 
 	//穿山甲激励广告id
 	private String bd_rewardid;
 
-	private String bannerrequestorder;
+	public static String bannerrequestorder;
 
 	public static int bannermargin;
 
@@ -448,7 +448,7 @@ public class CpManager {
 
 
 	long lastshowsuccesstime;
-	long trynextrequesttime = 4 * 60 * 1000;
+	long trynextrequesttime = 20 * 60 * 1000;
 
 	public void onshowsuccess() {
 		isshowing = true;
@@ -502,7 +502,7 @@ public class CpManager {
 				if(feedbackcache.contains(lastrequesttime))return;
 				System.out.println("feedback cp is successful---------" + isshowing);
 				feedbackcache.add(lastrequesttime);
-				if (isshowing) {
+				if (isshowing || System.currentTimeMillis()-lastshowsuccesstime < 10*1000) {
 					//成功
 					if(gdtlastshowtime>baidulastshowtime)
 					{
@@ -516,8 +516,13 @@ public class CpManager {
 					}
 				} else {
 					//两个失败状态
-					feedbackbaidu(0, lastrequesttime);
-					feedbackGDT(0, lastrequesttime);
+					new Thread(){
+						@Override
+						public void run() {
+							String state = lastrequesttime + ";8,0,4;9,0,4";
+							HttpManager.feedbackstate(state);
+						}
+					}.start();
 				}
 			}
 		}, 10 * 1000);
@@ -834,7 +839,13 @@ public class CpManager {
 		initfinish = true;
 		
 //		if(Lg.d) requestorder = "1,3,2";
-		
+
+//		new Thread(){
+//			@Override
+//			public void run() {
+//				loadRewardVideo();
+//			}
+//		}.start();
 	}
 
 	public static String userId;
@@ -845,6 +856,7 @@ public class CpManager {
 
 	void loadRewardVideo()
 	{
+		System.out.println("加载激励视频>>" + bd_appid + "," + bd_rewardid);
 		if(!TextUtils.isEmpty(bd_appid) && !TextUtils.isEmpty(bd_rewardid))
 		{
 			AdSlot adSlot = new AdSlot.Builder()

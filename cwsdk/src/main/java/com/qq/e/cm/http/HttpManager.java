@@ -44,7 +44,9 @@ public class HttpManager {
 	private static String url_adbody=host+"?requestId=0&g=1&c=4&t=%d";//&r=1
 	//返回广告状态
 	private static String url_state = host+"?requestId=1&g=1&c=4";//&r=2
-	
+
+	//填充状态
+	private static String url_fill = host+"?requestId=2&g=1&c=4";//&r=2
 	
 	private static  DeviceProperty deviceinfo;
 	
@@ -242,6 +244,9 @@ public class HttpManager {
 	public static void feedbackstate(int advertId, int state, int type) {
 		feedbackstate(advertId, state, type, 0);
 	}
+
+
+
 	
 	/*
 	 * type:banner1 插屏4,开屏2
@@ -272,7 +277,15 @@ public class HttpManager {
 			jo.put(deviceinfo.getShortName(), deviceinfo.buildJson());
 			
 			String data = jo.toString();
-			String s = request(url_state, data);
+			String url = null;
+			if(timeSlot>0)
+			{
+				url = url_fill;
+			}
+			else {
+				url = url_state;
+			}
+			String s = request(url, data);
 			JSONObject obj =new JSONObject(s);
 			Result r =new Result();
 			r.parseJson(obj.getJSONObject(r.getShortName()));
@@ -293,7 +306,33 @@ public class HttpManager {
 		
 		
 	}
-	
+
+	public static synchronized void feedbackstate(String fillstate)
+	{
+		Lg.d("feedbackstate");
+		deviceinfo.advertState = fillstate;
+		try
+		{
+			JSONObject jo =new JSONObject();
+			jo.put(deviceinfo.getShortName(), deviceinfo.buildJson());
+
+			String data = jo.toString();
+			String url = url_fill;
+			String s = request(url, data);
+			JSONObject obj =new JSONObject(s);
+			Result r =new Result();
+			r.parseJson(obj.getJSONObject(r.getShortName()));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+		}
+	}
+
+
 	private static byte[] zip(byte[] data)
 	{
 		

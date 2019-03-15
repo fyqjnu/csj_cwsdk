@@ -34,6 +34,8 @@ public class CWAPI {
 		CpManager.userId = userid;
 		CpManager.rewardName = rewardName;
 		CpManager.rewardAmount = rewardAmount;
+
+		CpManager.getinstance(null).loadRewardVideo();
 	}
 
 	public static void showRewardVideo(Activity a, RewardVideoPlayListener listener)

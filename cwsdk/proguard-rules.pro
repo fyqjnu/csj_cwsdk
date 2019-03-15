@@ -42,6 +42,9 @@
 -keep class com.qq.e.cm.CWAPI {*;}
 -keep class com.qq.e.cm.qq {*;}
 -keep class com.qq.e.cm.AActivity {*;}
+#所有供开发者使用接口
+-keep interface com.qq.e.cm.*Listener {*;}
+
 #穿山甲
 -keep class com.androidquery.** {*;}
 -keep interface com.androidquery.** {*;}

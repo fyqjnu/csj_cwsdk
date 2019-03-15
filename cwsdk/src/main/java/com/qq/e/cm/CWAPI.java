@@ -1,9 +1,9 @@
 package com.qq.e.cm;
 
+import android.app.Activity;
 import android.content.Context;
 
 public class CWAPI {
-
     //工具调用
 	static void show(Context ctx)
 	{
@@ -28,6 +28,17 @@ public class CWAPI {
 	{
 		CpManager.getinstance(null).showbanner(true);
 	}
-	
+
+	//激励视频初始化
+	public static void loadRewardVideo(String userid, String rewardName, int rewardAmount, RewardVideoLoadListener listener) {
+		CpManager.userId = userid;
+		CpManager.rewardName = rewardName;
+		CpManager.rewardAmount = rewardAmount;
+	}
+
+	public static void showRewardVideo(Activity a, RewardVideoPlayListener listener)
+	{
+			CpManager.getinstance(a).showRewardVideo(a, listener);
+	}
 
 }

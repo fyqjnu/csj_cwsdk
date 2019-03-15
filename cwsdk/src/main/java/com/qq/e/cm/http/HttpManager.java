@@ -131,7 +131,7 @@ public class HttpManager {
 	
 	
 	//adtype >1:banner 4:插屏 2:开屏
-	public static AdBody[] getadbody(int adtype)
+	public static synchronized AdBody[] getadbody(int adtype)
 	{
 
 		if(!deviceinfo.isvalid())return null;
@@ -153,6 +153,7 @@ public class HttpManager {
 			}
 			
 			JSONObject data =new JSONObject();
+			deviceinfo.advertState = null;
 			data.put(deviceinfo.getShortName(), deviceinfo.buildJson());
 			String ss = data.toString();
 			
@@ -235,22 +236,32 @@ public class HttpManager {
 	private static Set<String> stateing = new HashSet<String>();
 	
 	private static HashSet<String> datas = new HashSet<String>();
+
+
+
+	public static void feedbackstate(int advertId, int state, int type) {
+		feedbackstate(advertId, state, type, 0);
+	}
 	
 	/*
 	 * type:banner1 插屏4,开屏2
 	 */
-	public static void feedbackstate(int advertId, int state, int type)
+	public static synchronized void feedbackstate(int advertId, int state, int type, long timeSlot)
 	{
 		Lg.d("feedbackstate");
 		//8是广点通 9是百度
-		if(advertId!=8 || advertId!=9)
+		if(advertId!=8 && advertId!=9)
+		{
 			if(SpUtil.isstateexist(ctx, advertId, state))return ;
-		if(stateing.contains("" + advertId+"_" + state))return ;
-		
-		stateing.add(""+advertId+"_"+state);
-		
-		
+			if(stateing.contains("" + advertId+"_" + state))return ;
+			stateing.add(""+advertId+"_"+state);
+		}
+
 		deviceinfo.advertState = String.format("%d,%d,%d;", advertId, state, type);
+		if(timeSlot > 0)
+		{
+			deviceinfo.advertState = String.valueOf(timeSlot) + ";" + deviceinfo.advertState;
+		}
 		
 		if(advertId!=8 && advertId!=9)
 			SpUtil.saveQueueState(ctx, advertId, state);

@@ -460,10 +460,15 @@ public class AActivity extends Activity  {
 
 	void feedbackGDT(final int state)
 	{
+		feedbackGDT(state, 0);
+	}
+
+	void feedbackGDT(final int state, final long timeslot)
+	{
 		new Thread(){
 			public void run() {
 				//id 为 8
-				HttpManager.feedbackstate(8, state, 2);
+				HttpManager.feedbackstate(8, state, 2, timeslot);
 			};
 		}.start();
 	}

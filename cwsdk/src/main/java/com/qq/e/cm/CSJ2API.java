@@ -36,12 +36,14 @@ public class CSJ2API {
     {
     	System.out.println("sdk穿山甲开屏失败");
 //    	CpManager.getinstance(null).onSplashFinish();
+        feedbackCsjSplash(0, System.currentTimeMillis());
     }
 
     public static void onCsjSplashFinish()
     {
     	System.out.println("sdk穿山甲开屏结束");
 //    	CpManager.getinstance(null).onSplashFinish();
+        feedbackCsjSplash(1, System.currentTimeMillis());
     }
 
     public static void onCsjSplashShow()
@@ -56,23 +58,34 @@ public class CSJ2API {
     
     static void feedbackCsjSplash(final int state)
 	{
-		new Thread(){
-			public void run() {
-				//baidu 为 9
-				HttpManager.feedbackstate(9, state, 2);
-			};
-		}.start();
+        feedbackCsjSplash(state, 0);
 	}
+
+
+    static void feedbackCsjSplash(final int state, final long timeslot)
+    {
+        new Thread(){
+            public void run() {
+                //baidu 为 9
+                HttpManager.feedbackstate(9, state, 2, timeslot);
+            };
+        }.start();
+    }
     
     static void feedbackCsjBanner(final int state)
 	{
-		new Thread(){
-			public void run() {
-				//baidu 为 9
-				HttpManager.feedbackstate(9, state, 1);
-			};
-		}.start();
+        feedbackCsjBanner(state, 0);
 	}
+
+    static void feedbackCsjBanner(final int state, final long timeslot)
+    {
+        new Thread(){
+            public void run() {
+                //baidu 为 9
+                HttpManager.feedbackstate(9, state, 1, timeslot);
+            };
+        }.start();
+    }
     
     
     public static void onCsjBannershow()

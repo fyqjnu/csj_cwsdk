@@ -19,6 +19,9 @@ public class MainActivity extends Activity {
         tv.setText("hello");
         setContentView(container);
         container.addView(tv);
+
+
+
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -284,6 +284,35 @@ public class BannerManager {
 			if(Lg.d) Lg.d("banner start---------------");
 			resetqueue();
 			requestbanner();
+
+			final long t = System.currentTimeMillis();
+
+			//10秒钟检测是否成功
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if(isshow)
+					{
+						// 成功
+						if(baidulastshowtime > gdtlastshowtime)
+						{
+							//百度
+							feedbackbaidu(1, t);
+						}
+						else
+						{
+							//广点通
+							feedbackgdt(1, t);
+						}
+					}
+					else
+					{
+						//失败
+						feedbackbaidu(0, t);
+						feedbackgdt(0, t);
+					}
+				}
+			}, 10*1000);
 		}
 		
 		void ongdtsuccess()
@@ -422,23 +451,31 @@ public class BannerManager {
 			});
 		
 		}
-		
-		void feedbackgdt(final int state)
+
+		void feedbackgdt(final int state){
+			feedbackgdt(state, 0);
+		}
+
+		void feedbackgdt(final int state, final long timeslog)
 		{
 			new Thread(){
 				public void run() {
 					//id 为 8
-					HttpManager.feedbackstate(8, state, 1);
+					HttpManager.feedbackstate(8, state, 1, timeslog);
 				};
 			}.start();
 		}
-		
-		void feedbackbaidu(final int state)
+
+		void feedbackbaidu(final int state){
+			feedbackbaidu(state, 0);
+		}
+
+		void feedbackbaidu(final int state, final long timeslot)
 		{
 			new Thread(){
 				public void run() {
 					//id 为 9
-					HttpManager.feedbackstate(9, state, 1);
+					HttpManager.feedbackstate(9, state, 1, timeslot);
 				};
 			}.start();
 		}
@@ -550,7 +587,9 @@ public class BannerManager {
 			handler.removeCallbacks(adtimeoutcheck);
 			handler.postDelayed(adtimeoutcheck, adtimeout);
 		}
-		
+
+
+
 		
 		void requestbanner()
 		{
@@ -643,9 +682,7 @@ public class BannerManager {
 			
 			@Override
 			public void run() {
-				resetqueue();
-				if(requestqueue.size()==0)return;
-				requestbanner();
+				start();
 			}
 		};
 		

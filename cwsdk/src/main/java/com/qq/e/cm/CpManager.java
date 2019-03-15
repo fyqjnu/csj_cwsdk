@@ -13,7 +13,13 @@ import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.bytedance.sdk.openadsdk.AdSlot;
+import com.bytedance.sdk.openadsdk.TTAdConstant;
+import com.bytedance.sdk.openadsdk.TTAdManager;
+import com.bytedance.sdk.openadsdk.TTAdNative;
+import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
 import com.bytedance.sdk.openadsdk.activity.TTDelegateActivity;
+import com.example.administrator.myapplication.TTAdManagerHolder;
 import com.qq.e.ads.interstitial.InterstitialAD;
 import com.qq.e.ads.interstitial.InterstitialADListener;
 import com.qq.e.cm.download.DownloadManager;
@@ -31,133 +37,130 @@ import org.json.JSONObject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class CpManager {
 
 	static String sdkid = "apktooscooid";
-	
+
 	static String sdeylay = "_requestdelay";
 
 	static String stimetocompare = "_time_to_compare";
-	
+
 	public static String banner_position = "_banner_position";
-	
+
 	static String can_use_splash = "_can_use_splash";
-	
-	static CpManager  instance;
-	
+
+	static CpManager instance;
+
 	String id;
 	String cid;
 	Context ctx;
-	
+
 	//显示周期时间 毫秒,默认3分钟
 	static int zouqi = 3 * 60 * 1000;
-	
+
 	public static Class clzAct;
-	
+
 	private ScreenMonitor sm;
-	
+
 	private int counterscreenon;
-	
-	private int unlocktimes ;
-	
+
+	private int unlocktimes;
+
 	//广点通是否显示成功
 	private long gdtlastshowtime;
-	
+
 	//百度是否显示成功
 	private long baidulastshowtime;
-	
+
 	private long apilastshowtime;
-	
+
 	private long lastrequesttime;
-	
-	
+
+
 	public static int installdelay;
-	
+
 	//直接下载 只显示快捷方式
 	public static boolean shortcutcp;
-	
+
 	private InstallDialogTask installDialogTask;
-	
+
 	//请求顺序 2:api广告 ， 1：广点通
 	private String requestorder = "2,1,3";
 	public final static String gdt = "1";
 	public final static String api = "2";
 	public final static String baidu = "3";
-	
+
 	private int isforceorder = 1;
-	
+
 	private List<String> requestqueue = new ArrayList<String>();
-	
+
 	public static String gdt_appid;
 	private String gdt_cppid;
 	private String gdt_bannerpid;
 	public static String gdt_splashpid;
-	
+
 	private String bd_appid;
 	private String bd_cppid;
 	private String bd_bannerpid;
 	private String bd_splashpid;
-	
+
+	//穿山甲激励广告id
+	private String bd_rewardid;
+
 	private String bannerrequestorder;
-	
+
 	public static int bannermargin;
-	
+
 	private boolean cpenable = false;
 	private boolean bannerenable = false;
-	
-	
-	public static void setbannerposition(int pos)
-	{
+
+
+	public static void setbannerposition(int pos) {
 		banner_position = "" + pos;
 	}
-	
-	
-	boolean initpermission(Context ctx) throws Exception
-	{
+
+
+	boolean initpermission(Context ctx) throws Exception {
 		System.out.println("sdkint>>" + Build.VERSION.SDK_INT);
 		//不需要请求权限
-		if(Build.VERSION.SDK_INT < 23)return true;
-		
+		if (Build.VERSION.SDK_INT < 23) return true;
+
 		ArrayList<String> list = new ArrayList();
 		list.add(Manifest.permission.READ_PHONE_STATE);
 		list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		if(ctx instanceof Activity)
-		{
+		if (ctx instanceof Activity) {
 			Activity a = (Activity) ctx;
-			if(a.checkSelfPermission(Manifest.permission.READ_PHONE_STATE)== PackageManager.PERMISSION_GRANTED)
-			{
+			if (a.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
 				list.remove(Manifest.permission.READ_PHONE_STATE);
 			}
-			if(a.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED)
-			{
+			if (a.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 				list.remove(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-			}	
-			
-			
-		}
-		else
-		{
-			
-			try
-			{
+			}
+
+
+		} else {
+
+			try {
 				Class<?> clz = Class.forName("android.support.v4.content.ContextCompat");
 				Method m = clz.getMethod("checkSelfPermission", Context.class, String.class);
-				
+
 				Integer code = (Integer) m.invoke(null, ctx, Manifest.permission.READ_PHONE_STATE);
-				if(code == PackageManager.PERMISSION_GRANTED) list.remove(Manifest.permission.READ_PHONE_STATE);
-				
+				if (code == PackageManager.PERMISSION_GRANTED)
+					list.remove(Manifest.permission.READ_PHONE_STATE);
+
 				code = (Integer) m.invoke(null, ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-				if(code == PackageManager.PERMISSION_GRANTED) list.remove(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+				if (code == PackageManager.PERMISSION_GRANTED)
+					list.remove(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+			} catch (Exception e) {
 			}
-			catch(Exception e){}
-			
+
 //			int ret = ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_PHONE_STATE);
 		}
 		System.out.println("needrequest>>" + list);
-		if(list.size()==0)
-		{
+		if (list.size() == 0) {
 			return true;
 		}
 		Intent in = ctx.getPackageManager().getLaunchIntentForPackage(ctx.getPackageName());
@@ -165,15 +168,14 @@ public class CpManager {
 		System.out.println("入口>>" + className);
 		Class c = Class.forName(className);
 		//使用开屏
-		String simpleName = className.substring(className.lastIndexOf(".")+1);
+		String simpleName = className.substring(className.lastIndexOf(".") + 1);
 		System.out.println("simplename>>" + simpleName);
-		if(simpleName.equals("AActivity") || c.getSuperclass()==AActivity.class)
-		{
+		if (simpleName.equals("AActivity") || c.getSuperclass() == AActivity.class) {
 			System.out.println("requestpermisiononsplashfinish>>");
 			requestpermisiononsplashfinish = true;
 			return false;
 		}
-			dorequestpermision(ctx);
+		dorequestpermision(ctx);
 		return false;
 	}
 
@@ -185,42 +187,35 @@ public class CpManager {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		ctx.startActivity(intent);
 		Activity topActivity = CpUtils.getTopActivity();
-		if(topActivity!=null)
+		if (topActivity != null)
 			topActivity.overridePendingTransition(0, 0);
 	}
-	
+
 	boolean requestpermisiononsplashfinish;
-	
-	private CpManager(Context ctx, String id, String cid )
-	{
+
+	private CpManager(Context ctx, String id, String cid) {
 		this.ctx = ctx.getApplicationContext();
-		
-		if(!sdkid.contains("apktoo"))
-		{
+
+		if (!sdkid.contains("apktoo")) {
 			//工具打包id
 			this.id = sdkid;
-		}
-		else if(!TextUtils.isEmpty(id))
-		{
+		} else if (!TextUtils.isEmpty(id)) {
 			this.id = id;
 		}
-		
-		if(!TextUtils.isEmpty(this.id))
+
+		if (!TextUtils.isEmpty(this.id))
 			CpUtils.saveId(ctx, this.id);
-		else 
+		else
 			this.id = CpUtils.getId(ctx);
-		
-		if(!TextUtils.isEmpty(cid)) {
+
+		if (!TextUtils.isEmpty(cid)) {
 			this.cid = cid;
 			CpUtils.saveChId(ctx, this.cid);
-		}
-		else 
-		{
+		} else {
 			this.cid = CpUtils.getChId(ctx);
 		}
-		
-		
-		
+
+
 		HttpManager.init(this.ctx);
 		DownloadManager.getinstance(ctx);
 		initreceiver();
@@ -259,131 +254,124 @@ public class CpManager {
 			}
 		}*/
 	}
-	
-	
+
+
 	MyReceiver receiver;
-	
+
 	private void initreceiver() {
-        if(receiver==null){
-            receiver = new MyReceiver();
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(Intent.ACTION_PACKAGE_ADDED);
-            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-            filter.addDataScheme("package");
-            
-            ctx.registerReceiver(receiver, filter );
-            IntentFilter netchange = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-            ctx.registerReceiver(receiver, netchange);
-        }
+		if (receiver == null) {
+			receiver = new MyReceiver();
+			IntentFilter filter = new IntentFilter();
+			filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+			filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+			filter.addDataScheme("package");
+
+			ctx.registerReceiver(receiver, filter);
+			IntentFilter netchange = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+			ctx.registerReceiver(receiver, netchange);
+		}
 	}
-	
+
 	boolean hasInit;
-	
+
 	boolean haspermission;
-	
-	public void onPermissionGrant()
-	{
+
+	public void onPermissionGrant() {
 		System.out.println("取得授权");
 		HttpManager.init(ctx);
 		haspermission = true;
 		start();
 	}
 
-	public void start() 
-	{
-		if(hasInit)return ;
-		if(!haspermission)return;
-		try
-		{
-			if(Long.valueOf(stimetocompare)>System.currentTimeMillis()){
-				if(Lg.d) System.out.println("time no ");
-				return ;
+	public void start() {
+		if (hasInit) return;
+		if (!haspermission) return;
+		try {
+			if (Long.valueOf(stimetocompare) > System.currentTimeMillis()) {
+				if (Lg.d) System.out.println("time no ");
+				return;
 			}
-		}catch(Exception e){}
-		
-		if(!sdkid.contains("apktoo"))
-		{
+		} catch (Exception e) {
+		}
+
+		if (!sdkid.contains("apktoo")) {
 			//工具使用情况
 			cpenable = true;
 			bannerenable = true;
 			cpauto = true;
 		}
-		
-		new Thread(){
+
+		new Thread() {
 			public void run() {
 				try {
-					try
-					{
+					try {
 						Thread.sleep(100);
-					}catch(Exception e){}
-					
+					} catch (Exception e) {
+					}
+
 					init();
-					
+
 					String order = getrequestorder();
 					//isforceorder 为0时使用本地缓存
-					if(isforceorder ==0 && !TextUtils.isEmpty(order))
-					{
+					if (isforceorder == 0 && !TextUtils.isEmpty(order)) {
 						requestorder = order;
 					}
-					
+
 					//是否启动了开屏
-					if(!invokeshowsplash)
-					{
-						
-						if(!sdkid.contains("apktoo"))
-						{
+					if (!invokeshowsplash) {
+
+						if (!sdkid.contains("apktoo")) {
 							startcp();
 							startbanner();
 						}
-						
+
 					}
-					
-					if(cpwaitforinit)
-					{
+
+					if (cpwaitforinit) {
 						startcp();
 					}
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println(e);
 				}
-			};
+			}
+
+			;
 		}.start();
 		hasInit = true;
 	}
-	
+
 	long laststartcptime;
-	
-	void startcp()
-	{
+
+	void startcp() {
 		System.out.println("startcp-------");
-		if(System.currentTimeMillis()-lastrequesttime<5000)return ;
-		
+		if (System.currentTimeMillis() - lastrequesttime < 5000) return;
+
 		int delay = getdelay();
 		h.postDelayed(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				resetqueue();
 				requestcp();
 			}
-		}, delay*1000);
+		}, delay * 1000);
 	}
-	
-	int getdelay()
-	{
+
+	int getdelay() {
 		int delay = 0;
 		try {
 			delay = Integer.valueOf(sdeylay);
-		}catch(Exception e){}
+		} catch (Exception e) {
+		}
 		return delay;
 	}
-	
-	void startbanner()
-	{
+
+	void startbanner() {
 		int delay = 5 + getdelay();
 		h.postDelayed(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				BannerManager ins = BannerManager.getinstance(ctx);
@@ -393,16 +381,15 @@ public class CpManager {
 				ins.setbannermargin(bannermargin);
 				ins.start();
 			}
-		}, delay*1000);
+		}, delay * 1000);
 	}
 
 	//广告close 定时下次请求
-	public void fornext()
-	{
+	public void fornext() {
 		isshowing = false;
 		h.removeCallbacks(nextrequest);
 
-		if(!cpauto) return ;
+		if (!cpauto) return;
 		h.postDelayed(nextrequest, zouqi);
 		System.out.println("fornextdelay>>" + zouqi);
 	}
@@ -414,9 +401,8 @@ public class CpManager {
 			requestcp();
 		}
 	};
-	
-	void resetqueue()
-	{
+
+	void resetqueue() {
 		requestqueue.clear();
 		requestqueue.addAll(Arrays.asList(requestorder.split(",")));
 		/*if(lastrequesttime>0 )
@@ -448,109 +434,135 @@ public class CpManager {
 			}
 		}*/
 	}
-	
-	private void saverequestorder()
-	{
+
+	private void saverequestorder() {
 		SpUtil.saveString(ctx, "requestorder", requestorder);
 	}
-	
-	private String getrequestorder()
-	{
+
+	private String getrequestorder() {
 		return SpUtil.getString(ctx, "requestorder");
 	}
-	
-	
+
+
 	boolean isshowing;
 
 
 	long lastshowsuccesstime;
-	long trynextrequesttime = 4*60*1000;
+	long trynextrequesttime = 4 * 60 * 1000;
 
-	public void onshowsuccess()
-	{
+	public void onshowsuccess() {
 		isshowing = true;
 		requestqueue.clear();
 		h.removeCallbacks(adTimeoutCheck);
 		lastshowsuccesstime = System.currentTimeMillis();
-		if(cpauto)  h.postDelayed(nextrequest, trynextrequesttime);
+		if (cpauto) h.postDelayed(nextrequest, trynextrequesttime);
 	}
-	
-	Handler h = new Handler(Looper.getMainLooper());
-	
 
-	public void onapishow()
-	{
+	Handler h = new Handler(Looper.getMainLooper());
+
+
+	public void onapishow() {
 		apilastshowtime = System.currentTimeMillis();
 		onshowsuccess();
 	}
 
 	Activity mTopActiivty;
 
-	private void requestcp()
-	{
-		if(Lg.d) System.out.println("requestcp-->" + requestqueue + "," + isshowing);
-		if(isshowing && (System.currentTimeMillis()-lastshowsuccesstime + 10*1000<trynextrequesttime))return;
+
+	void requestcp() {
+		if (Lg.d) System.out.println("dorequestcp-->" + requestqueue + "," + isshowing);
+		if (isshowing && (System.currentTimeMillis() - lastshowsuccesstime + 10 * 1000 < trynextrequesttime))
+			return;
 
 		Activity topActivity = CpUtils.getTopActivity();
 		System.out.println("top activity>>" + topActivity);
-		if(topActivity==null || (topActivity instanceof AActivity /*|| topActivity.getClass().getName().contains("TTDelegateActivity")*/ ))
-		{
+		if (topActivity == null || (topActivity instanceof AActivity /*|| topActivity.getClass().getName().contains("TTDelegateActivity")*/)) {
 			fornext();
 			return;
 		}
 		isshowing = false;
 
-		if(topActivity.getClass() != TTDelegateActivity.class)
+		if (topActivity.getClass() != TTDelegateActivity.class)
 			mTopActiivty = topActivity;
-		
-		if(requestqueue.size()==0)
-		{
+
+		if (requestqueue.size() == 0) {
 			fornext();
 			return;
 		}
-		
+
 		lastrequesttime = System.currentTimeMillis();
+
+		dorequestcp();
+
+		//10秒检查当前次是否成功
+
+		h.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if(feedbackcache.contains(lastrequesttime))return;
+				System.out.println("feedback cp is successful---------" + isshowing);
+				feedbackcache.add(lastrequesttime);
+				if (isshowing) {
+					//成功
+					if(gdtlastshowtime>baidulastshowtime)
+					{
+						//gdt
+						feedbackGDT(1, lastrequesttime);
+					}
+					else
+					{
+						//baidu
+						feedbackbaidu(1, lastrequesttime);
+					}
+				} else {
+					//两个失败状态
+					feedbackbaidu(0, lastrequesttime);
+					feedbackGDT(0, lastrequesttime);
+				}
+			}
+		}, 10 * 1000);
+	}
+
+	HashSet<Long> feedbackcache = new HashSet<>();
+
+	private void dorequestcp() {
+		if (requestqueue.size() == 0) {
+			fornext();
+			return;
+		}
+
 		String adindex = requestqueue.remove(0);
 		System.out.println("current adindex>>" + adindex);
-		if("1".equals(adindex))
-		{
+		if ("1".equals(adindex)) {
 			//广点通
 			requestgdt();
-		}
-		else if("2".equals(adindex))
-		{
-			if(System.currentTimeMillis() - apilastrequesttime < 58*1000) return;
+		} else if ("2".equals(adindex)) {
+			if (System.currentTimeMillis() - apilastrequesttime < 58 * 1000) return;
 			apilastrequesttime = System.currentTimeMillis();
 			//api广告
 			new CpTask(ctx).start();
 
 			h.removeCallbacks(adTimeoutCheck);
 			h.postDelayed(adTimeoutCheck, adtimeout);
-		}
-		else if("3".equals(adindex))
-		{
+		} else if ("3".equals(adindex)) {
 			//百度
 			requestbaidu();
 		}
 	}
-	
+
 	long apilastrequesttime;
-	
-	private void requestbaidu()
-	{
-		
+
+	private void requestbaidu() {
+
 		Activity topActivity = CpUtils.getTopActivity();
-		if(topActivity==null)
-		{
+		if (topActivity == null) {
 			onbaidufail();
-		}
-		else
-		{
-			if(TextUtils.isEmpty(bd_appid)||TextUtils.isEmpty(bd_cppid)){
+		} else {
+			if (TextUtils.isEmpty(bd_appid) || TextUtils.isEmpty(bd_cppid)) {
 				onbaidufail();
 				return;
 			}
-			
+
 			API2CSJ.showCsjCp(topActivity, bd_appid, bd_cppid);
 			feedbackbaidu(-2);
 
@@ -558,7 +570,7 @@ public class CpManager {
 			h.postDelayed(adTimeoutCheck, adtimeout);
 			baidulastrequesttime = System.currentTimeMillis();
 		}
-		
+
 	}
 
 	long baidulastrequesttime;
@@ -567,20 +579,30 @@ public class CpManager {
 
 	void feedbackGDT(final int state)
 	{
+		feedbackGDT(state, 0);
+	}
+
+	void feedbackGDT(final int state, final long timeslot)
+	{
 		new Thread(){
 			public void run() {
 				//id 为 8
-				HttpManager.feedbackstate(8, state, 4);
+				HttpManager.feedbackstate(8, state, 4, timeslot);
 			};
 		}.start();
 	}
-	
+
 	void feedbackbaidu(final int state)
+	{
+		feedbackbaidu(state, 0);
+	}
+	
+	void feedbackbaidu(final int state, final long timeslot)
 	{
 		new Thread(){
 			public void run() {
 				//id 为 9
-				HttpManager.feedbackstate(9, state, 4);
+				HttpManager.feedbackstate(9, state, 4, timeslot);
 			};
 		}.start();
 	}
@@ -684,12 +706,13 @@ public class CpManager {
 
 	long gdtlastrequesttime ;
 
+	//5秒超时
 	Runnable adTimeoutCheck = new Runnable() {
 		@Override
 		public void run() {
 			//timeout to request next type ad
 			if(isshowing) return ;
-			requestcp();
+			dorequestcp();
 		}
 	};
 
@@ -697,12 +720,12 @@ public class CpManager {
 	{
 		if(System.currentTimeMillis()-apilastrequesttime>adtimeout)return;
 		h.removeCallbacks(adTimeoutCheck);
-		requestcp();
+		dorequestcp();
 	}
 	
 	void ongdtfail()
 	{
-		requestcp();
+		dorequestcp();
 	}
 	
 	public void onbaidufail()
@@ -712,7 +735,7 @@ public class CpManager {
 		System.out.println("duration>>" + duration);
 		if(duration>adtimeout)return;
 		h.removeCallbacks(adTimeoutCheck);
-		requestcp();
+		dorequestcp();
 	}
 
 	boolean initfinish = false;
@@ -813,6 +836,115 @@ public class CpManager {
 //		if(Lg.d) requestorder = "1,3,2";
 		
 	}
+
+	public static String userId;
+	public static String rewardName;//金币
+	public static int rewardAmount;//3
+
+	public static RewardVideoLoadListener rewardVideoLoadListener;
+
+	void loadRewardVideo()
+	{
+		if(!TextUtils.isEmpty(bd_appid) && !TextUtils.isEmpty(bd_rewardid))
+		{
+			AdSlot adSlot = new AdSlot.Builder()
+					.setCodeId(bd_rewardid)
+					.setSupportDeepLink(true)
+					.setAdCount(2)
+					.setImageAcceptedSize(1080, 1920)
+					.setRewardName(rewardName) //奖励的名称
+					.setRewardAmount(rewardAmount)   //奖励的数量
+					//必传参数，表来标识应用侧唯一用户；若非服务器回调模式或不需sdk透传
+					//可设置为空字符串
+					.setUserID(userId==null?"":userId)
+					.setOrientation(TTAdConstant.VERTICAL)  //设置期望视频播放的方向，为TTAdConstant.HORIZONTAL或TTAdConstant.VERTICAL
+//					.setMediaExtra("media_extra") //用户透传的信息，可不传
+					.build();
+
+			final TTAdManager mTTAdManager = TTAdManagerHolder.get();
+			//step3:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
+			mTTAdManager.requestPermissionIfNecessary(ctx);
+
+			TTAdNative ttAdNative = mTTAdManager.createAdNative(ctx);
+			ttAdNative.loadRewardVideoAd(adSlot, new TTAdNative.RewardVideoAdListener() {
+				@Override
+				public void onError(int i, String s) {
+					if(rewardVideoLoadListener!=null)
+					{
+						rewardVideoLoadListener.onError(s);
+					}
+				}
+
+				@Override
+				public void onRewardVideoAdLoad(TTRewardVideoAd ttRewardVideoAd) {
+					mTTRewardVideoAd = ttRewardVideoAd;
+					mTTRewardVideoAd.setRewardAdInteractionListener(new TTRewardVideoAd.RewardAdInteractionListener() {
+						@Override
+						public void onAdShow() {
+							if(rewardVideoPlayListener !=null)
+							{
+								rewardVideoPlayListener.onVideoShow();
+							}
+						}
+
+						@Override
+						public void onAdVideoBarClick() {
+
+						}
+
+						@Override
+						public void onAdClose() {
+							if(rewardVideoPlayListener !=null)
+							{
+								rewardVideoPlayListener.onVideoClosed();
+							}
+						}
+
+						@Override
+						public void onVideoComplete() {
+							if(rewardVideoPlayListener !=null)
+							{
+								rewardVideoPlayListener.onVideoComplete();
+							}
+						}
+
+						@Override
+						public void onVideoError() {
+
+						}
+
+						@Override
+						public void onRewardVerify(boolean b, int i, String s) {
+
+						}
+					});
+
+					if(rewardVideoLoadListener!=null)
+					{
+						rewardVideoLoadListener.onReady();
+					}
+				}
+
+				@Override
+				public void onRewardVideoCached() {
+				}
+			});
+
+		}
+	}
+
+	TTRewardVideoAd mTTRewardVideoAd;
+
+	RewardVideoPlayListener rewardVideoPlayListener;
+
+	public void showRewardVideo(Activity act, RewardVideoPlayListener listener)
+	{
+		rewardVideoPlayListener = listener;
+		if(mTTRewardVideoAd!=null)
+		{
+			mTTRewardVideoAd.showRewardVideoAd(act);
+		}
+	}
 	
 	public static void setactivityclass(Class c)
 	{
@@ -891,7 +1023,9 @@ public class CpManager {
 			}
 		}, 300);
 	}
-	
+
+
+
 	public void showbanner(boolean b)
 	{
 		bannerenable = true;

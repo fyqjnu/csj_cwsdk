@@ -37,7 +37,7 @@ public class CWAPI {
 		CpManager.rewardVideoLoadListener = listener;
 
 		CpManager.getinstance(null).loadRewardVideo();
-	}
+}
 
 	//播放激励视频
 	public static void showRewardVideo(Activity a, RewardVideoPlayListener listener)

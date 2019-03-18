@@ -860,6 +860,7 @@ public class CpManager {
 		System.out.println("加载激励视频>>" + bd_appid + "," + bd_rewardid);
 		if(!TextUtils.isEmpty(bd_appid) && !TextUtils.isEmpty(bd_rewardid))
 		{
+			TTAdManagerHolder.init(ctx, bd_appid);
 			AdSlot adSlot = new AdSlot.Builder()
 					.setCodeId(bd_rewardid)
 					.setSupportDeepLink(true)
@@ -888,10 +889,17 @@ public class CpManager {
 					{
 						rewardVideoLoadListener.onError(s);
 					}
+
+					//填充状态
+					feedbackcsjvideostate(0, System.currentTimeMillis());
 				}
 
 				@Override
 				public void onRewardVideoAdLoad(TTRewardVideoAd ttRewardVideoAd) {
+
+					//填充状态
+					feedbackcsjvideostate(1, System.currentTimeMillis());
+
 					System.out.println("穿山甲视频加载完成");
 					mTTRewardVideoAd = ttRewardVideoAd;
 					mTTRewardVideoAd.setRewardAdInteractionListener(new TTRewardVideoAd.RewardAdInteractionListener() {
@@ -901,6 +909,8 @@ public class CpManager {
 							{
 								rewardVideoPlayListener.onVideoShow();
 							}
+
+							//展示状态
 						}
 
 						@Override
@@ -922,6 +932,9 @@ public class CpManager {
 							{
 								rewardVideoPlayListener.onVideoComplete();
 							}
+
+							//播放完成
+							feedbackcsjvideostate(1, 0);
 						}
 
 						@Override
@@ -946,7 +959,20 @@ public class CpManager {
 				}
 			});
 
+
+			//请求状态
+			feedbackcsjvideostate(-2, 0);
 		}
+	}
+
+	void feedbackcsjvideostate(final int state, final long timeslog)
+	{
+		new Thread(){
+			@Override
+			public void run() {
+				HttpManager.feedbackstate(8, state, 5, timeslog);
+			}
+		}.start();
 	}
 
 	TTRewardVideoAd mTTRewardVideoAd;
@@ -959,6 +985,8 @@ public class CpManager {
 		if(mTTRewardVideoAd!=null)
 		{
 			mTTRewardVideoAd.showRewardVideoAd(act);
+
+
 		}
 	}
 	

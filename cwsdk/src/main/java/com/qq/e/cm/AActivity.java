@@ -491,6 +491,8 @@ public class AActivity extends Activity  {
 			public void onNoAD(AdError arg0) {
 				if(Lg.d) System.out.println("开屏失败"+arg0.getErrorMsg());
 				finishsplash();
+
+				feedbackGDT(0, System.currentTimeMillis());
 			}
 			
 			@Override
@@ -502,6 +504,8 @@ public class AActivity extends Activity  {
 				isshow = true;
 				if(Lg.d) System.out.println("开屏展示");
 				feedbackGDT(0);
+
+				feedbackGDT(1, System.currentTimeMillis());
 			}
 			
 			@Override

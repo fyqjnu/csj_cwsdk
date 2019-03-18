@@ -15,6 +15,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bytedance.sdk.openadsdk.activity.TTRewardVideoActivity;
 import com.qq.e.ads.banner.ADSize;
 import com.qq.e.ads.banner.BannerADListener;
 import com.qq.e.ads.banner.BannerView;
@@ -55,7 +56,7 @@ public class BannerManager {
 			@Override
 			public void run() {
 				Activity act = CpUtils.getTopActivity();
-				if(act !=null)
+				if(act !=null && act.getClass()!=AActivity.class && act.getClass() != TTRewardVideoActivity.class)
 				{
 					if(ins!=null) ins.notifycurrentactivity(act);
 				}
@@ -129,7 +130,7 @@ public class BannerManager {
 	{
 		
 		Activity topActivity = CpUtils.getTopActivity();
-		if(topActivity==null || topActivity.getClass()==AActivity.class)
+		if(topActivity==null || topActivity.getClass()==AActivity.class || topActivity.getClass() == TTRewardVideoActivity.class)
 		{
 			handler.postDelayed(new Runnable() {
 				@Override

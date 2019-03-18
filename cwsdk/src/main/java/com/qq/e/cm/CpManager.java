@@ -882,6 +882,8 @@ public class CpManager {
 			ttAdNative.loadRewardVideoAd(adSlot, new TTAdNative.RewardVideoAdListener() {
 				@Override
 				public void onError(int i, String s) {
+
+					System.out.println("加载穿山甲视频失败>>" + s);
 					if(rewardVideoLoadListener!=null)
 					{
 						rewardVideoLoadListener.onError(s);
@@ -890,6 +892,7 @@ public class CpManager {
 
 				@Override
 				public void onRewardVideoAdLoad(TTRewardVideoAd ttRewardVideoAd) {
+					System.out.println("穿山甲视频加载完成");
 					mTTRewardVideoAd = ttRewardVideoAd;
 					mTTRewardVideoAd.setRewardAdInteractionListener(new TTRewardVideoAd.RewardAdInteractionListener() {
 						@Override

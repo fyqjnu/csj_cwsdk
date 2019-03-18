@@ -29,15 +29,17 @@ public class CWAPI {
 		CpManager.getinstance(null).showbanner(true);
 	}
 
-	//激励视频初始化
+	//预加载激励视频
 	public static void loadRewardVideo(String userid, String rewardName, int rewardAmount, RewardVideoLoadListener listener) {
 		CpManager.userId = userid;
 		CpManager.rewardName = rewardName;
 		CpManager.rewardAmount = rewardAmount;
+		CpManager.rewardVideoLoadListener = listener;
 
 		CpManager.getinstance(null).loadRewardVideo();
 	}
 
+	//播放激励视频
 	public static void showRewardVideo(Activity a, RewardVideoPlayListener listener)
 	{
 			CpManager.getinstance(a).showRewardVideo(a, listener);

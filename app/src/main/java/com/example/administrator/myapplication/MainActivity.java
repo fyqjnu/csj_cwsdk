@@ -60,7 +60,6 @@ public class MainActivity extends Activity {
         });
 /*
 
-        String name = Go.getname();
         System.out.println("goname>>" + name);
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);

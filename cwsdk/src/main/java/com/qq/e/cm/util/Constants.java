@@ -47,7 +47,7 @@ public final class Constants {
 	/**
 	 * StringCoder
 	 */
-	public final static String KEY ="www.abmobi.org";//
+	public final static String KEY ="xxx.abcdef.www";//
 
 	
 

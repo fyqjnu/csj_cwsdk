@@ -40,7 +40,6 @@
 
         </activity>
 
-        <activity android:name="com.qq.e.xdad.AActivity" ></activity>
 
         <provider
             android:name="com.bytedance.sdk.openadsdk.TTFileProvider"

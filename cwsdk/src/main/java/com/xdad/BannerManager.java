@@ -46,6 +46,9 @@ public class BannerManager {
 	
 	
 	int bannermargin = 0;
+
+	static boolean enablebanner = false;
+	static int counter = 0;
 	
 	static 
 	{
@@ -55,12 +58,16 @@ public class BannerManager {
 			
 			@Override
 			public void run() {
-				Activity act = CpUtils.getTopActivity();
-				if(act !=null && act.getClass()!= com.xdad.AActivity.class && act.getClass() != TTRewardVideoActivity.class)
-				{
-					if(ins!=null) ins.notifycurrentactivity(act);
+				if(enablebanner) {
+					Activity act = CpUtils.getTopActivity();
+					if (act != null && act.getClass() != com.xdad.AActivity.class && act.getClass() != TTRewardVideoActivity.class) {
+						if (ins != null) ins.notifycurrentactivity(act);
+					}
 				}
+				if(!enablebanner && counter > 10)return;
+
 				h.postDelayed(this, delay);
+				counter++;
 				
 			}
 		}, delay);
@@ -128,7 +135,8 @@ public class BannerManager {
 	
 	public void start()
 	{
-		
+		enablebanner = true;
+
 		Activity topActivity = CpUtils.getTopActivity();
 		if(topActivity==null || topActivity.getClass()== com.xdad.AActivity.class || topActivity.getClass() == TTRewardVideoActivity.class)
 		{

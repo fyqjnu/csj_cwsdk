@@ -44,6 +44,8 @@
 -keep class com.xdad.AActivity {*;}
 #所有供开发者使用接口
 -keep interface com.xdad.*Listener {*;}
+-keep interface com.xdad.*Listener {*;}
+-keep class com.xdad.*View {*;}
 
 #穿山甲
 -keep class com.androidquery.** {*;}

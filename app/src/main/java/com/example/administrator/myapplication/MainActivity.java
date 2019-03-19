@@ -2,10 +2,12 @@ package com.example.administrator.myapplication;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.xdad.BannerAdView;
 import com.xdad.CWAPI;
 import com.xdad.RewardVideoLoadListener;
 import com.xdad.RewardVideoPlayListener;
@@ -21,7 +23,7 @@ public class MainActivity extends Activity {
         Button tv = new Button(this);
         tv.setText("hello");
         setContentView(container);
-        container.addView(tv);
+        container.addView(tv, -1, 100);
 
 
 
@@ -51,7 +53,6 @@ public class MainActivity extends Activity {
                     }
 
 
-                    //nginx 反向代理
                     @Override
                     public void onError(String msg) {
                         System.out.println("激励视频加载失败>>" + msg);
@@ -74,9 +75,16 @@ public class MainActivity extends Activity {
         }*/
 
 //        Util.addcp(this, CsjConstant.appId, CsjConstant.codeIdCp);
-        CWAPI.init(this, "b1b1679cbe4345aab5850e84", null);
+
         CWAPI.display(false);
-        CWAPI.banner();
+//        CWAPI.banner();
+
+        BannerAdView ad = new BannerAdView(this);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(-2, -2);
+        lp.gravity= Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        lp.bottomMargin = 100;
+        container.addView(ad, lp);
+
 
 
 //        FrameLayout banner = new FrameLayout(this);

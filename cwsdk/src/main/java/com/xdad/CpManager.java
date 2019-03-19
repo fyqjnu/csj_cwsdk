@@ -122,6 +122,17 @@ public class CpManager {
 	}
 
 
+	//是否是打包工具
+	boolean ispacktool()
+	{
+		boolean ret = true;
+		if(sdkid.equals("apktooscooid")) {
+			ret = false;
+		}
+		System.out.println("ispacktool>>" + ret);
+		return ret;
+	}
+
 	boolean initpermission(Context ctx) throws Exception {
 		System.out.println("sdkint>>" + Build.VERSION.SDK_INT);
 		//不需要请求权限
@@ -293,7 +304,7 @@ public class CpManager {
 		} catch (Exception e) {
 		}
 
-		if (!sdkid.contains("apktoo")) {
+		if (ispacktool()) {
 			//工具使用情况
 			cpenable = true;
 			bannerenable = true;
@@ -319,7 +330,7 @@ public class CpManager {
 					//是否启动了开屏
 					if (!invokeshowsplash) {
 
-						if (!sdkid.contains("apktoo")) {
+						if (ispacktool()) {
 							startcp();
 							startbanner();
 						}

@@ -580,43 +580,19 @@ public class AActivity extends Activity  {
 		@Override
 		public boolean onInterceptTouchEvent(MotionEvent ev) {
 			if(Lg.d) System.out.println("onInterceptTouchEvent");
-//			if(ev.getX()<view.getWidth() && ev.getY()<view.getHeight())
-//			{
-//				if(x > 0)
-//				{
-//					ev = MotionEvent.obtain(100, 100, ev.getAction(), x, y, ev.getMetaState());
-//					reset();
-//				}
-//			}
-			ev = handleEvent(ev);
+//			ev = handleEvent(ev);
 			return super.onInterceptTouchEvent(ev);
 		}
 		
 		@Override
 		public boolean onTouchEvent(MotionEvent ev) {
-//			if(ev.getX()<view.getWidth() && ev.getY()<view.getHeight())
-//			{
-//				if(x > 0)
-//				{
-//					ev = MotionEvent.obtain(100, 100, ev.getAction(), x, y, ev.getMetaState());
-//					reset();
-//				}
-//			}
-			ev = handleEvent(ev);
+//			ev = handleEvent(ev);
 			return super.onTouchEvent(ev);
 		}
 		
 		@Override
 		public boolean dispatchTouchEvent(MotionEvent ev) {
-//			if(ev.getX()<view.getWidth() && ev.getY()<view.getHeight())
-//			{
-//				if(x > 0)
-//				{
-//					ev = MotionEvent.obtain(100, 100, ev.getAction(), x, y, ev.getMetaState());
-//					reset();
-//				}
-//			}
-			ev = handleEvent(ev);
+//			ev = handleEvent(ev);
 			return super.dispatchTouchEvent(ev);
 		}
 		//目前没用
@@ -631,43 +607,7 @@ public class AActivity extends Activity  {
 				}
 			}, 1200);
 		}
-		
-		MotionEvent handleEvent(MotionEvent ev)
-		{
-			if(Lg.d) System.out.println("close>>" + view.getVisibility());
-			if(!hasShowClose)return ev;
-			if(view.getVisibility() != View.VISIBLE) return ev;
-			Random r = new Random();
-			int nextInt = r.nextInt(100);
-			if(Lg.d) System.out.println("handleEvent>>"+intercepterCounter + "," + closeRate1 + "," + closeRate2 +"," + nextInt);
-			if(intercepterCounter==0)
-			{
-				if(nextInt>closeRate1) return ev;
-			}
-			else if(intercepterCounter==1)
-			{
-				if(nextInt>closeRate2) return ev;
-			}
-			else 
-			{
-				return ev;
-			}
-			generateXY(getContext());
-			
-			if(Lg.d) System.out.println("view>" +  ev.getX() + "," + ev.getY());
-			if(Lg.d) System.out.println("bm>>" + view.getRight() + "," + view.getBottom());
-			if(ev.getX()<view.getRight() && ev.getY()<view.getBottom())
-			{
-				if(x > 0)
-				{
-					if(Lg.d) System.out.println("x,y>>" + x + "," + y);
-					ev = MotionEvent.obtain(100, 100, ev.getAction(), x, y, ev.getMetaState());
-				}
-			}
-			increCounter();
-			return ev;
-		}
-		
+
 		long lastIncreTime;
 		void increCounter()
 		{

@@ -78,6 +78,14 @@ public class AActivity extends Activity  {
 		System.out.println(this + ",finish>>" + startrequestpermission + "," + type);
 		if(startrequestpermission)return ;
 		if(hasfinish)return;
+
+		if(type<1 && hasstop)
+		{
+			needfinishonstart = true;
+			//开屏
+			return ;
+		}
+
 		System.out.println(this + " finish");
 		super.finish();
 		overridePendingTransition(0, 0);
@@ -97,7 +105,27 @@ public class AActivity extends Activity  {
 	{
 		return mainActivityname;
 	}
-	
+
+
+	boolean hasstop;
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		hasstop = true;
+	}
+
+	boolean needfinishonstart;
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if(needfinishonstart)
+		{
+			hasstop = false;
+			finishsplash();
+		}
+	}
 	
 	void gotomainpage()
 	{

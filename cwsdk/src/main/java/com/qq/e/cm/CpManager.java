@@ -19,7 +19,6 @@ import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
 import com.bytedance.sdk.openadsdk.activity.TTDelegateActivity;
-import com.example.administrator.myapplication.TTAdManagerHolder;
 import com.qq.e.ads.interstitial.InterstitialAD;
 import com.qq.e.ads.interstitial.InterstitialADListener;
 import com.qq.e.cm.download.DownloadManager;

@@ -1,4 +1,4 @@
-package com.example.administrator.myapplication;
+package com.qq.e.cm;
 
 import android.os.Handler;
 import android.os.Looper;

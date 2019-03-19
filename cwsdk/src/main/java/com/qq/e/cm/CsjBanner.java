@@ -1,4 +1,4 @@
-package com.example.administrator.myapplication;
+package com.qq.e.cm;
 
 import android.app.Activity;
 import android.view.View;
@@ -8,7 +8,6 @@ import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdDislike;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTBannerAd;
-import com.qq.e.cm.CSJ2API;
 
 /**
  * Created by Administrator on 2019/2/14 0014.

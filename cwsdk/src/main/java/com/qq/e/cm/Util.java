@@ -1,4 +1,4 @@
-package com.example.administrator.myapplication;
+package com.qq.e.cm;
 
 import android.app.Activity;
 
@@ -8,8 +8,6 @@ import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTInteractionAd;
-import com.qq.e.cm.CSJ2API;
-import com.qq.e.cm.CpManager;
 
 /**
  * Created by Administrator on 2019/1/23 0023.

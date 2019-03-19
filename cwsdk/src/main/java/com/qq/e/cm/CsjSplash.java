@@ -1,8 +1,9 @@
-package com.example.administrator.myapplication;
+package com.qq.e.cm;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.MainThread;
 import android.util.Log;
@@ -13,55 +14,70 @@ import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTSplashAd;
 
-/**
- * 开屏广告Activity示例
- */
-public class SplashActivity extends Activity implements WeakHandler.IHandler {
-    private static final String TAG = "SplashActivity";
-    private TTAdNative mTTAdNative;
-    private FrameLayout mSplashContainer;
-    //是否强制跳转到主页面
-    private boolean mForceGoMain;
+import java.lang.ref.WeakReference;
 
-    //开屏广告加载发生超时但是SDK没有及时回调结果的时候，做的一层保护。
-    private final WeakHandler mHandler = new WeakHandler(this);
-    //开屏广告加载超时时间,建议大于1000,这里为了冷启动第一次加载到广告并且展示,示例设置了2000ms
+import static android.content.ContentValues.TAG;
+
+/**
+ * Created by Administrator on 2019/2/14 0014.
+ */
+
+public class CsjSplash {
+
+
     private static final int AD_TIME_OUT = 2000;
     private static final int MSG_GO_MAIN = 1;
     //开屏广告是否已经加载
-    private boolean mHasLoaded;
+    static boolean mHasLoaded;
 
-    @SuppressWarnings("RedundantCast")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        CsjSplash.onCreate(this, CsjConstant.appId, CsjConstant.codeIdSplash);
-    }
+    static TTAdNative mTTAdNative;
 
-
-    @Override
-    protected void onResume() {
-        //判断是否该跳转到主页面
-        if (mForceGoMain) {
-            mHandler.removeCallbacksAndMessages(null);
-            goToMainActivity();
+    static Handler mHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what)
+            {
+                case MSG_GO_MAIN:
+                    if (!mHasLoaded) {
+                        showToast("广告已超时，跳到主页面");
+                        goToMainActivity();
+                    }
+                    break;
+            }
         }
-        super.onResume();
-    }
+    };
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mForceGoMain = true;
+    static WeakReference<Activity> actRef;
+
+
+    static FrameLayout mSplashContainer;
+
+    public static void onCreate(Activity act, String appId, String codeId)
+    {
+        actRef = new WeakReference<Activity>(act);
+        FrameLayout container = new FrameLayout(act);
+        act.setContentView(container);
+        mSplashContainer = container;
+
+        TTAdManagerHolder.init(act.getApplicationContext(),appId);
+        //step2:创建TTAdNative对象
+        mTTAdNative = TTAdManagerHolder.get().createAdNative(act);
+        //在合适的时机申请权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题
+        //在开屏时候申请不太合适，因为该页面倒计时结束或者请求超时会跳转，在该页面申请权限，体验不好
+        // TTAdManagerHolder.getInstance(this).requestPermissionIfNecessary(this);
+        //定时，AD_TIME_OUT时间到时执行，如果开屏广告没有加载则跳转到主页面
+        mHandler.sendEmptyMessageDelayed(MSG_GO_MAIN, AD_TIME_OUT);
+        //加载开屏广告
+        loadSplashAd(codeId);
     }
 
     /**
      * 加载开屏广告
      */
-    private void loadSplashAd() {
+    private static void loadSplashAd(String codeId) {
         //step3:创建开屏广告请求参数AdSlot,具体参数含义参考文档
         AdSlot adSlot = new AdSlot.Builder()
-                .setCodeId("809962181")
+                .setCodeId(codeId)
                 .setSupportDeepLink(true)
                 .setImageAcceptedSize(1080, 1920)
                 .build();
@@ -74,6 +90,8 @@ public class SplashActivity extends Activity implements WeakHandler.IHandler {
                 mHasLoaded = true;
                 showToast(message);
                 goToMainActivity();
+
+                CSJ2API.onCsjSplashFail();
             }
 
             @Override
@@ -82,6 +100,8 @@ public class SplashActivity extends Activity implements WeakHandler.IHandler {
                 mHasLoaded = true;
                 showToast("开屏广告加载超时");
                 goToMainActivity();
+
+                CSJ2API.onCsjSplashFail();
             }
 
             @Override
@@ -107,12 +127,17 @@ public class SplashActivity extends Activity implements WeakHandler.IHandler {
                     public void onAdClicked(View view, int type) {
                         Log.d(TAG, "onAdClicked");
                         showToast("开屏广告点击");
+
+
+                        CSJ2API.onCsjSplashClick();
                     }
 
                     @Override
                     public void onAdShow(View view, int type) {
                         Log.d(TAG, "onAdShow");
                         showToast("开屏广告展示");
+
+                        CSJ2API.onCsjSplashShow();
                     }
 
                     @Override
@@ -121,6 +146,8 @@ public class SplashActivity extends Activity implements WeakHandler.IHandler {
                         showToast("开屏广告跳过");
                         goToMainActivity();
 
+                        CSJ2API.onCsjSplashFinish();
+
                     }
 
                     @Override
@@ -128,6 +155,9 @@ public class SplashActivity extends Activity implements WeakHandler.IHandler {
                         Log.d(TAG, "onAdTimeOver");
                         showToast("开屏广告倒计时结束");
                         goToMainActivity();
+
+
+                        CSJ2API.onCsjSplashFinish();
                     }
                 });
             }
@@ -137,25 +167,23 @@ public class SplashActivity extends Activity implements WeakHandler.IHandler {
     /**
      * 跳转到主页面
      */
-    private void goToMainActivity() {
-        Intent intent = new Intent();
-        intent.setClassName(this, "com.example.administrator.myapplication.MainActivity");
-        startActivity(intent);
-        mSplashContainer.removeAllViews();
-        this.finish();
-    }
-
-    private void showToast(String msg) {
-        TToast.show(this, msg);
-    }
-
-    @Override
-    public void handleMsg(Message msg) {
-        if (msg.what == MSG_GO_MAIN) {
-            if (!mHasLoaded) {
-                showToast("广告已超时，跳到主页面");
-                goToMainActivity();
-            }
+    private static void goToMainActivity() {
+        System.out.println();
+        if(actRef.get()==null)return;
+        try {
+            Class<?> c = Class.forName("com.example.administrator.myapplication.MainActivity");
+            Intent intent = new Intent();
+            intent.setClassName(actRef.get(), "com.example.administrator.myapplication.MainActivity");
+            actRef.get().startActivity(intent);
+        }catch (Exception e){
         }
+        actRef.get().finish();
     }
+
+    private static void showToast(String msg) {
+        if(actRef.get()!=null)
+            TToast.show(actRef.get(), msg);
+    }
+
+
 }

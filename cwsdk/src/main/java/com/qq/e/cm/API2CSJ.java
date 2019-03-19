@@ -3,10 +3,6 @@ package com.qq.e.cm;
 import android.app.Activity;
 import android.view.ViewGroup;
 
-import com.example.administrator.myapplication.CsjBanner;
-import com.example.administrator.myapplication.CsjSplash;
-import com.example.administrator.myapplication.Util;
-
 
 public class API2CSJ {
 	

@@ -6,9 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import com.qq.e.cm.CWAPI;
-import com.qq.e.cm.RewardVideoLoadListener;
-import com.qq.e.cm.RewardVideoPlayListener;
+import com.xdad.CWAPI;
+import com.xdad.RewardVideoLoadListener;
+import com.xdad.RewardVideoPlayListener;
+
 
 public class MainActivity extends Activity {
 

@@ -39,11 +39,11 @@
 -keep interface com.qq.e.comm.** {*;}
 -keep interface com.qq.e.ads.** {*;}
 -keep class com.example.administrator.myapplication.** {*;}
--keep class com.qq.e.cm.CWAPI {*;}
--keep class com.qq.e.cm.qq {*;}
--keep class com.qq.e.cm.AActivity {*;}
+-keep class com.xdad.CWAPI {*;}
+-keep class com.xdad.qq {*;}
+-keep class com.xdad.AActivity {*;}
 #所有供开发者使用接口
--keep interface com.qq.e.cm.*Listener {*;}
+-keep interface com.xdad.*Listener {*;}
 
 #穿山甲
 -keep class com.androidquery.** {*;}

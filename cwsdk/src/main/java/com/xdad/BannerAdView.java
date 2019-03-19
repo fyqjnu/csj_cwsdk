@@ -166,7 +166,7 @@ public class BannerAdView extends FrameLayout {
     new Thread(){
         @Override
         public void run() {
-            HttpManager.feedbackstate(9, state, 1, timeslot);
+            HttpManager.feedbackstate(8, state, 1, timeslot);
         }
     }.start();
     }
@@ -176,7 +176,7 @@ public class BannerAdView extends FrameLayout {
         new Thread(){
             @Override
             public void run() {
-                HttpManager.feedbackstate(8, state, 1, timeslot);
+                HttpManager.feedbackstate(9, state, 1, timeslot);
             }
         }.start();
     }

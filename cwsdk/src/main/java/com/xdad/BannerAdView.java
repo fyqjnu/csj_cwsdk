@@ -2,7 +2,6 @@ package com.xdad;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.AttrRes;
@@ -48,7 +47,7 @@ public class BannerAdView extends FrameLayout {
 
     void oncreate()
     {
-        setBackgroundColor(Color.CYAN);
+//        setBackgroundColor(Color.CYAN);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {

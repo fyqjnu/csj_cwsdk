@@ -110,6 +110,7 @@ public class BannerAdView extends FrameLayout {
     };
 
     void fornext() {
+
         handler.postDelayed(nextrequest, 60 * 1000);
     }
 
@@ -292,6 +293,7 @@ public class BannerAdView extends FrameLayout {
 
             @Override
             public void onclose(View v) {
+                removeAllViews();
                 fornext();
             }
 

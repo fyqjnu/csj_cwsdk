@@ -115,7 +115,7 @@ public class AActivity extends Activity  {
 		hasstop = true;
 	}
 
-	boolean needfinishonstart;
+	public boolean needfinishonstart;
 
 	@Override
 	protected void onStart() {
@@ -139,11 +139,13 @@ public class AActivity extends Activity  {
 		}
 		catch(Exception e){}
 	}
-	
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
+		ins = this;
 //		if(ins!=null) ins.finish();
 //		ins = this;
 		

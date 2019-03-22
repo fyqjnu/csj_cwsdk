@@ -54,6 +54,11 @@ public class CSJ2API {
     public static void onCsjSplashClick()
     {
     	feedbackCsjSplash(1);
+        //点击
+        if(AActivity.ins!=null)
+        {
+            AActivity.ins.needfinishonstart = true;
+        }
     }
     
     static void feedbackCsjSplash(final int state)

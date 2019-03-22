@@ -836,6 +836,7 @@ public class CpManager {
 							}
 
 							//展示状态
+							feedbackcsjvideostate(0, 0);
 						}
 
 						@Override

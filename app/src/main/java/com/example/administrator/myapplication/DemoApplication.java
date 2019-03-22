@@ -15,8 +15,8 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        //b1b1679cbe4345aab5850e84
-        CWAPI.init(this, "b1b1679cbe4345aab5850e84", null);
+        //b1b1679cbe4345aab5850e84  俊澎
+        CWAPI.init(this, "830de89e28fb4c7b8d2112e3", null);
         //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
 //        TTAdManagerHolder.init(this);
 

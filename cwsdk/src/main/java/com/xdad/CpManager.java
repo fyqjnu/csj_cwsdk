@@ -19,8 +19,6 @@ import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
 import com.bytedance.sdk.openadsdk.activity.TTDelegateActivity;
-import com.qq.e.ads.interstitial.InterstitialAD;
-import com.qq.e.ads.interstitial.InterstitialADListener;
 import com.xdad.download.DownloadManager;
 import com.xdad.http.GetStringHttp;
 import com.xdad.http.HttpManager;
@@ -29,7 +27,6 @@ import com.xdad.util.Constants;
 import com.xdad.util.CpUtils;
 import com.xdad.util.Lg;
 import com.xdad.util.SpUtil;
-import com.qq.e.comm.util.AdError;
 
 import org.json.JSONObject;
 
@@ -550,7 +547,7 @@ public class CpManager {
 		System.out.println("current adindex>>" + adindex);
 		if ("1".equals(adindex)) {
 			//广点通
-			requestgdt();
+			dorequestcp();
 		} else if ("2".equals(adindex)) {
 			if (System.currentTimeMillis() - apilastrequesttime < 58 * 1000) return;
 			apilastrequesttime = System.currentTimeMillis();
@@ -636,88 +633,6 @@ public class CpManager {
 		onshowsuccess();
 	}
 	
-	private void requestgdt() {
-		if(Lg.d) System.out.println("reqGDT------------"+gdt_appid);
-		if(TextUtils.isEmpty(gdt_appid))
-		{
-			ongdtfail();
-			return ;
-		}
-
-		if(mTopActiivty==null)
-		{
-			fornext();
-			return;
-		}
-		final InterstitialAD iad = new InterstitialAD(mTopActiivty, gdt_appid, gdt_cppid);
-		if(Lg.d) System.out.println("gdt id>" + gdt_appid + "," + gdt_cppid +"," + mTopActiivty);
-
-
-		InterstitialADListener interstitialADListener = new InterstitialADListener() {
-			
-			@Override
-			public void onNoAD(AdError arg0) {
-				if(System.currentTimeMillis()-gdtlastrequesttime>adtimeout)return;
-				ongdtfail();
-				h.removeCallbacks(adTimeoutCheck);
-				if(Lg.d )System.out.println("cp onNoAD> " + arg0.getErrorCode() + "," + arg0.getErrorMsg());
-			}
-			@Override
-			public void onADReceive() {
-				if(Lg.d )System.out.println("cp onADReceive >> isshowing" + isshowing);
-				if(isshowing)return ;
-
-				Activity topActivity = CpUtils.getTopActivity();
-				System.out.println("topactivity>>" + topActivity);
-				if(topActivity!=null &&  topActivity.getClass() == TTDelegateActivity.class)
-				{
-					System.out.println("topactivity>>" + topActivity);
-					topActivity.finish();
-					topActivity = CpUtils.getTopActivity();
-				}
-				iad.showAsPopupWindow();
-
-				h.removeCallbacks(adTimeoutCheck);
-				feedbackGDT(-1);
-				System.out.println("do show gdt cp");
-			}
-			@Override
-			public void onADOpened() {
-				if(Lg.d )System.out.println("cp onADOpened");
-				ongdtsuccess();
-			}
-			@Override
-			public void onADLeftApplication() {
-				if(Lg.d )System.out.println("cp onADLeftApplication");
-			}
-			@Override
-			public void onADExposure() {
-				if(Lg.d )System.out.println("cp onADExposure");
-				
-			}
-			@Override
-			public void onADClosed() {
-				if(Lg.d )System.out.println("cp onADClosed");
-				//下次请求
-				fornext();
-			}
-			@Override
-			public void onADClicked() {
-				if(Lg.d )System.out.println("cp onADClicked");
-				feedbackGDT(1);
-			}
-		};
-		iad.setADListener(interstitialADListener);
-		
-		iad.loadAD();
-		
-		//请求状态
-		feedbackGDT(-2);
-
-		gdtlastrequesttime= System.currentTimeMillis();
-		h.removeCallbacks(adTimeoutCheck);
-		h.postDelayed(adTimeoutCheck, adtimeout);
-	}
 
 	long gdtlastrequesttime ;
 

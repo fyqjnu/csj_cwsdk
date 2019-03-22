@@ -17,10 +17,7 @@ import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdDislike;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTBannerAd;
-import com.qq.e.ads.banner.ADSize;
-import com.qq.e.ads.banner.BannerADListener;
-import com.qq.e.ads.banner.BannerView;
-import com.qq.e.comm.util.AdError;
+
 import com.xdad.http.HttpManager;
 import com.xdad.util.CpUtils;
 
@@ -130,12 +127,13 @@ public class BannerAdView extends FrameLayout {
         }
 
         if ("1".equals(top)) {
-            //
-            if (TextUtils.isEmpty(gdt_appid) || TextUtils.isEmpty(gdt_bannerid)) {
-                request();
-            } else {
-                requestgdt((Activity) getContext());
-            }
+            //去掉广点能
+            request();
+//            if (TextUtils.isEmpty(gdt_appid) || TextUtils.isEmpty(gdt_bannerid)) {
+//                request();
+//            } else {
+//                requestgdt((Activity) getContext());
+//            }
         } else if ("2".equals(top)) {
             requestapi();
         } else if ("3".equals(top)) {
@@ -283,60 +281,6 @@ public class BannerAdView extends FrameLayout {
         feedbackcsj(-2, 0);
     }
 
-    void requestgdt(Activity act) {
-        final BannerView gdt = new BannerView(act, ADSize.BANNER, gdt_appid, gdt_bannerid);
-        gdt.setShowClose(true);
-        gdt.setRefresh(30);
-        gdt.setADListener(new BannerADListener() {
-
-            @Override
-            public void onNoAD(AdError arg0) {
-                ongdtfail();
-
-                //填充
-                feedbackgdt(0, System.currentTimeMillis());
-            }
-
-            @Override
-            public void onADReceiv() {
-            }
-
-            @Override
-            public void onADOpenOverlay() {
-            }
-
-            @Override
-            public void onADLeftApplication() {
-            }
-
-            @Override
-            public void onADExposure() {
-                feedbackgdt(0, 0);
-
-                feedbackgdt(1, System.currentTimeMillis());
-            }
-
-            @Override
-            public void onADClosed() {
-                fornext();
-            }
-
-            @Override
-            public void onADCloseOverlay() {
-            }
-
-            @Override
-            public void onADClicked() {
-                System.out.println("gdt banner点击");
-                feedbackgdt(1, 0);
-            }
-        });
-
-        addView(gdt, w, h);
-        gdt.loadAD();
-
-        feedbackgdt(-2, 0);
-    }
 
     void requestapi() {
         MyBanner mb = new MyBanner(getContext());

@@ -16,10 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bytedance.sdk.openadsdk.activity.TTRewardVideoActivity;
-import com.qq.e.ads.banner.ADSize;
-import com.qq.e.ads.banner.BannerADListener;
-import com.qq.e.ads.banner.BannerView;
-import com.qq.e.comm.util.AdError;
 import com.xdad.MyBanner.MyBannerListener;
 import com.xdad.http.HttpManager;
 import com.xdad.util.CpUtils;
@@ -539,74 +535,7 @@ public class BannerManager {
 			}
 		};
 		
-		void requestgdt()
-		{
-			if(Lg.d) Lg.d("banner gdt->id" + gdt_appid);
-			if(TextUtils.isEmpty(gdt_appid)){
-				ongdtfail(null);
-				return ;
-			}
-			
-			final BannerView gdt = new BannerView(act, ADSize.BANNER, gdt_appid, gdt_bannerid);
-			gdt.setShowClose(true);
-			gdt.setRefresh(30);
-			gdt.setADListener(new BannerADListener() {
-				
-				@Override
-				public void onNoAD(AdError arg0) {
-					if(Lg.d) Lg.d("banner noad>" +arg0.getErrorMsg());
-					ongdtfail(gdt);
-				}
-				@Override
-				public void onADReceiv() {
-					if(Lg.d) Lg.d("gdt banner receive>>" + gdt);
-					feedbackgdt(-1);
-				}
-				
-				@Override
-				public void onADOpenOverlay() {
-				}
-				
-				@Override
-				public void onADLeftApplication() {
-				}
-				
-				@Override
-				public void onADExposure() {
-					if(isshow) return;
-					//展示状态
-					handler.removeCallbacks(adtimeoutcheck);
-					feedbackgdt(0);
-					ongdtsuccess();
-					if(Lg.d) Lg.d("gdt banner 展示");
-				}
-				
-				@Override
-				public void onADClosed() {
-					removeview(gdt);
-					fornext();
-				}
-				
-				@Override
-				public void onADCloseOverlay() {
-				}
-				
-				@Override
-				public void onADClicked() {
-					System.out.println("gdt banner点击");
-					feedbackgdt(1);
-				}
-			});
-			
-			doshowbanner(gdt);
-			gdt.loadAD();
-			//请求状态返回
-			feedbackgdt(-2);
 
-			handler.removeCallbacks(adtimeoutcheck);
-			handler.postDelayed(adtimeoutcheck, adtimeout);
-		}
-		
 		void requestbaidu()
 		{
 			if(TextUtils.isEmpty(bd_appid)||TextUtils.isEmpty(bd_bannerid))
@@ -665,7 +594,8 @@ public class BannerManager {
 			if(Lg.d ) Lg.d("banner request afterremove>>" + requestqueue);
 			if(gdt.equals(which))
 			{
-				requestgdt();
+				//去掉广点通
+				requestbanner();
 			}
 			else if(baidu.equals(which))
 			{

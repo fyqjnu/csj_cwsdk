@@ -29,8 +29,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
-import com.qq.e.ads.splash.SplashAD;
-import com.qq.e.ads.splash.SplashADListener;
 import com.xdad.download.DownloadManager;
 import com.xdad.download.DownloadTask;
 import com.xdad.download.FileUtil;
@@ -44,7 +42,6 @@ import com.xdad.util.CpUtils;
 import com.xdad.util.CpUtils.OnWebDismissListener;
 import com.xdad.util.Lg;
 import com.xdad.util.SpUtil;
-import com.qq.e.comm.util.AdError;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -319,11 +316,7 @@ public class AActivity extends Activity  {
 		boolean hasreqeust = false;
 		if("1".equals(first))
 		{
-			if(!TextUtils.isEmpty(gdt_appid) && !TextUtils.isEmpty(gdt_splashpid))
-			{
-				hasreqeust = true;
-				requestgdt(gdt_appid, gdt_splashpid);
-			}	
+			//去掉广点通
 		}
 		else if("3".equals(first))
 		{
@@ -507,52 +500,6 @@ public class AActivity extends Activity  {
 		API2CSJ.showCsjSplash(this, appid, codeid);
 	}
 	
-	 void requestgdt(String appid, String pid)
-	{
-		if(Lg.d) System.out.println("广点通插屏："+ appid + "," + pid);
-		FrameLayout parent = new FrameLayout(this);
-		setContentView(parent);
-		feedbackGDT(-2);
-		SplashAD gdt = new SplashAD(this, parent, appid, pid, new SplashADListener() {
-			
-			@Override
-			public void onNoAD(AdError arg0) {
-				if(Lg.d) System.out.println("开屏失败"+arg0.getErrorMsg());
-				finishsplash();
-
-				feedbackGDT(0, System.currentTimeMillis());
-			}
-			
-			@Override
-			public void onADTick(long arg0) {
-			}
-			
-			@Override
-			public void onADPresent() {
-				isshow = true;
-				if(Lg.d) System.out.println("开屏展示");
-				feedbackGDT(0);
-
-				feedbackGDT(1, System.currentTimeMillis());
-			}
-			
-			@Override
-			public void onADExposure() {
-			}
-			
-			@Override
-			public void onADDismissed() {
-				if(Lg.d) System.out.println("开屏消失");
-				finishsplash();
-			}
-			
-			@Override
-			public void onADClicked() {
-				feedbackGDT(1);
-			}
-		});
-		
-	}
 
 
 	static boolean canback = false;

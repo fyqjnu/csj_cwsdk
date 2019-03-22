@@ -10,6 +10,7 @@ public class SplashActivity extends AActivity {
 
     @Override
     public String getMainActivityName() {
+        //跳转到主页面
         return "com.example.administrator.myapplication.MainActivity";
     }
 }

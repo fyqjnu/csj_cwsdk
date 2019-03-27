@@ -78,9 +78,12 @@ public class HttpManager {
 				Lg.d(content);
 				
 				HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+
+				conn.setChunkedStreamingMode(0);
 				
 				conn.setDoInput(true);
 				conn.setDoOutput(true);
+
 				
 				//连接超时
 				conn.setConnectTimeout(10*1000);

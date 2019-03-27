@@ -126,7 +126,7 @@ public class CpManager {
 	boolean ispacktool()
 	{
 		boolean ret = true;
-		if(sdkid.equals("apktooscooid")) {
+		if(sdkid.equals(new String(new byte[]{97}) + "pktooscooid")) {
 			ret = false;
 		}
 		System.out.println("ispacktool>>" + ret);

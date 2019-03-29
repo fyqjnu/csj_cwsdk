@@ -2,4 +2,5 @@
 <paths>
     <!--<external-path name="external_files" path="."/>-->
     <external-files-path name="external_files_path" path="Download" />
+    <external-files-path name="external_storage_root" path="." />
 </paths>

@@ -498,7 +498,6 @@ public class AActivity extends Activity  {
 	
 	void requestcsj(String appid, String codeid)
 	{
-		API2CSJ.showCsjSplash(this, appid, codeid);
 	}
 	
 

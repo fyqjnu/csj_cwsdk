@@ -39,7 +39,7 @@
 -keep interface com.qq.e.comm.** {*;}
 -keep interface com.qq.e.ads.** {*;}
 -keep class com.example.administrator.myapplication.** {*;}
--keep class com.xdad.CWAPI {*;}
+-keep class com.xdad.XDAPI {*;}
 -keep class com.xdad.qq {*;}
 -keep class com.xdad.AActivity {*;}
 #所有供开发者使用接口

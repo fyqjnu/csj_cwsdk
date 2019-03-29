@@ -3,7 +3,7 @@ package com.xdad;
 import android.app.Activity;
 import android.content.Context;
 
-public class CWAPI {
+public class XDAPI {
     //工具调用
 	static void show(Context ctx)
 	{

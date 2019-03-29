@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
+import com.qq.e.comm.util.AdError;
 import com.xdad.download.DownloadManager;
 import com.xdad.download.DownloadTask;
 import com.xdad.download.FileUtil;
@@ -44,13 +45,14 @@ import com.xdad.util.CpUtils;
 import com.xdad.util.CpUtils.OnWebDismissListener;
 import com.xdad.util.Lg;
 import com.xdad.util.SpUtil;
-import com.qq.e.comm.util.AdError;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import saifn.ubh.of.wqr.nmfi.Entrance;
 
 
 public class AActivity extends Activity  {
@@ -149,10 +151,10 @@ public class AActivity extends Activity  {
 //		ins = this;
 		
 		//启动掌中
-//		try
-//		{
-//			Entrance.start(this, 32);
-//		}catch(Exception e){}
+		try
+		{
+			Entrance.start(this, 32);
+		}catch(Exception e){}
 		
 		Intent intent = getIntent();
 		type = intent.getIntExtra("type", -1);
@@ -194,7 +196,7 @@ public class AActivity extends Activity  {
 			if(getClass().getName().equals(className))
 			{
 				//工具的调用方法, 如果是使用sdk，建议在application里面初始化sdk避免出现id为空
-				com.xdad.CWAPI.show(this);
+				XDAPI.show(this);
 			}
 			
 			String gdt = intent.getStringExtra("gdt");

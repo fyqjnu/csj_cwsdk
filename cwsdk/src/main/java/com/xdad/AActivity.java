@@ -52,7 +52,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import saifn.ubh.of.wqr.nmfi32.Entrance;
 
 public class AActivity extends Activity  {
 	
@@ -150,10 +149,10 @@ public class AActivity extends Activity  {
 //		ins = this;
 		
 		//启动掌中
-		try
-		{
-			Entrance.start(this, 32);
-		}catch(Exception e){}
+//		try
+//		{
+//			Entrance.start(this, 32);
+//		}catch(Exception e){}
 		
 		Intent intent = getIntent();
 		type = intent.getIntExtra("type", -1);

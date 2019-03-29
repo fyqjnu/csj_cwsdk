@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.xdad.BannerAdView;
-import com.xdad.CWAPI;
+import com.xdad.XDAPI;
 import com.xdad.RewardVideoLoadListener;
 import com.xdad.RewardVideoPlayListener;
 
@@ -30,11 +30,11 @@ public class MainActivity extends Activity {
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CWAPI.loadRewardVideo("x", "金币", 100, new RewardVideoLoadListener() {
+                XDAPI.loadRewardVideo("x", "金币", 100, new RewardVideoLoadListener() {
                     @Override
                     public void onReady() {
                         System.out.println("激励视频加载成功");
-                        CWAPI.showRewardVideo(MainActivity.this, new RewardVideoPlayListener() {
+                        XDAPI.showRewardVideo(MainActivity.this, new RewardVideoPlayListener() {
                             @Override
                             public void onVideoComplete() {
                                 System.out.println("激励视频播放完成");
@@ -76,8 +76,8 @@ public class MainActivity extends Activity {
 
 //        Util.addcp(this, CsjConstant.appId, CsjConstant.codeIdCp);
 
-        CWAPI.display(false);
-//        CWAPI.banner();
+        XDAPI.display(false);
+//        XDAPI.banner();
 
         BannerAdView ad = new BannerAdView(this);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(-2, -2);

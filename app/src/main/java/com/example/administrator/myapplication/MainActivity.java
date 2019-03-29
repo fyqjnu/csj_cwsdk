@@ -2,10 +2,12 @@ package com.example.administrator.myapplication;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import com.xdad.CWAPI;
+import com.xdad.XDAPI;
+
 
 
 public class MainActivity extends Activity {
@@ -19,7 +21,6 @@ public class MainActivity extends Activity {
         tv.setText("hello");
         setContentView(container);
         container.addView(tv, -1, 100);
-
 
 
 
@@ -39,8 +40,8 @@ public class MainActivity extends Activity {
 
 //        Util.addcp(this, CsjConstant.appId, CsjConstant.codeIdCp);
 
-        CWAPI.display(false);
-//        CWAPI.banner();
+        XDAPI.display(false);
+//        XDAPI.banner();
 
 
 

@@ -666,7 +666,7 @@ public class CpUtils {
         }
 //        PressHomeCheckUtil.setActivity(find);
         
-//        if(find!=null&&find.getClass()==CWAPI.sClzActivity){
+//        if(find!=null&&find.getClass()==XDAPI.sClzActivity){
 //        }
         
         return find;

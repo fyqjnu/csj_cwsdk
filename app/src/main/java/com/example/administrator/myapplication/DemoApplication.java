@@ -2,7 +2,7 @@ package com.example.administrator.myapplication;
 
 import android.app.Application;
 
-import com.xdad.CWAPI;
+import com.xdad.XDAPI;
 
 /**
  * Create by hanweiwei on 11/07/2018
@@ -17,7 +17,7 @@ public class DemoApplication extends Application {
 
         //b1b1679cbe4345aab5850e84  俊澎
         //830de89e28fb4c7b8d2112e3  测试
-        CWAPI.init(this, "a", null);
+        XDAPI.init(this, "a", null);
         //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
 //        TTAdManagerHolder.init(this);
 

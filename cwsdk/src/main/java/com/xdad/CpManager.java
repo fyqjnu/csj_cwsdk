@@ -551,7 +551,8 @@ public class CpManager {
 			h.postDelayed(adTimeoutCheck, adtimeout);
 		} else if ("3".equals(adindex)) {
 			//百度
-			requestbaidu();
+//			requestbaidu();
+			dorequestcp();
 		}
 	}
 

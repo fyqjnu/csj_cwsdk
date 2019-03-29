@@ -1,13 +1,13 @@
 package com.xdad.download;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
-import android.content.Context;
-import android.text.TextUtils;
 
 public class DownloadManager {
 
@@ -31,6 +31,8 @@ public class DownloadManager {
 		
 		this.ctx = ctx.getApplicationContext();
 		dbmgr = DbManager.getinstance(this.ctx);
+
+		FileUtil.init(ctx);
 		List<DownloadRecord> records = dbmgr.getallrecords();
 		for(DownloadRecord record :records)
 		{

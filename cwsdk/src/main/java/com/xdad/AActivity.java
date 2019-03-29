@@ -455,14 +455,18 @@ public class AActivity extends Activity  {
 				{
 					//web
 					CpUtils.openweb(AActivity.this, currentad.url);
-					TrackUtil.track(currentad.clickTrackingUrl);
+
 				}
 				else if(currentad.type == 1)
 				{
 					//下载app
 					DownloadManager.downloadapk(currentad.url, FileUtil.getapkfile(currentad.url),
 							new SimpleDownApkListenerImpl(AActivity.this, currentad, 2));
+
 				}
+
+				//
+				TrackUtil.track(currentad.clickTrackingUrl);
 			}
 		});
 		

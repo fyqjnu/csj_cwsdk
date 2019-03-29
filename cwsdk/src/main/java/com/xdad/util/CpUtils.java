@@ -41,8 +41,10 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.ArrayMap;
@@ -674,11 +676,30 @@ public class CpUtils {
 	
 	public static void installapk(Context ctx, File file)
 	{
-		if(file==null ||!file.exists())return ;
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		ctx.startActivity(intent);
+		try {
+			if (file == null || !file.exists()) return;
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+				Method m = FileProvider.class.getDeclaredMethod("getPathStrategy", Context.class, String.class);
+					System.out.println("method>>" + m);
+				m.setAccessible(true);
+				Object obj = m.invoke(null, ctx, ctx.getPackageName() + ".TTFileProvider");
+					System.out.println("obj>>" + obj);
+					Field f = obj.getClass().getDeclaredField("mRoots");
+					f.setAccessible(true);
+					Object mroot = f.get(obj);
+					System.out.println("root>>" + mroot);
+
+				Uri uriForFile = FileProvider.getUriForFile(ctx, ctx.getPackageName() + ".TTFileProvider", file);
+				intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
+			} else {
+				intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			}
+			ctx.startActivity(intent);
+		}catch (Exception e){}
 	}
 	
 	

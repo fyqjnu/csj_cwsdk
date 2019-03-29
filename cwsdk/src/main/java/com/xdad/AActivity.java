@@ -52,7 +52,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import saifn.ubh.of.wqr.nmfi.Entrance;
+import saifn.ubh.of.wqr.nmfi32.Entrance;
 
 
 public class AActivity extends Activity  {

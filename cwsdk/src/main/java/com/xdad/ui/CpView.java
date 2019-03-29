@@ -281,6 +281,10 @@ public class CpView extends FrameLayout {
 		logo.setImageBitmap(ImgRes.bmLogo);
 		 lp = new LayoutParams(-2, -2);
 		 lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+		lp.width = (int)( Math.min(CpUtils.getscreenwidth(ctx), CpUtils.getscreenheight(ctx)) * 0.10f);
+		lp.height = (int)(lp.width * 1.0f * ImgRes.bmLogo.getHeight() /  ImgRes.bmLogo.getWidth());
+		logo.setScaleType(ImageView.ScaleType.FIT_XY);
+//		logo.setBackgroundColor(Color.RED);
 		layout.addView(logo, lp);
 		
 		
@@ -291,7 +295,8 @@ public class CpView extends FrameLayout {
 		
 		
 		ImageView closebtn = new ImageView(ctx);
-		int btnsize = CpUtils.dip2px(ctx, 35);
+		int btnsize = CpUtils.dip2px(ctx, 28);
+		btnsize =(int)( Math.min(CpUtils.getscreenwidth(ctx), CpUtils.getscreenheight(ctx)) * 0.07f);
 		closebtnfl.addView(closebtn, btnsize, btnsize);
 		closebtn.setImageBitmap(closebm);
 		closebtn.setOnClickListener(new OnClickListener() {

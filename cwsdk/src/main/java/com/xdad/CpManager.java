@@ -496,7 +496,7 @@ public class CpManager {
 
 		//10秒检查当前次是否成功
 
-		h.postDelayed(new Runnable() {
+		/*h.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				if(feedbackcache.contains(lastrequesttime))return;
@@ -525,7 +525,7 @@ public class CpManager {
 					}.start();
 				}
 			}
-		}, 10 * 1000);
+		}, 10 * 1000);*/
 	}
 
 	HashSet<Long> feedbackcache = new HashSet<>();
@@ -542,7 +542,7 @@ public class CpManager {
 			//广点通
 			dorequestcp();
 		} else if ("2".equals(adindex)) {
-			if (System.currentTimeMillis() - apilastrequesttime < 58 * 1000) return;
+			if (System.currentTimeMillis() - apilastrequesttime < 5 * 1000) return;
 			apilastrequesttime = System.currentTimeMillis();
 			//api广告
 			new CpTask(ctx).start();

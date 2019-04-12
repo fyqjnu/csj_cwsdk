@@ -2,14 +2,19 @@ package com.xdad.http;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.xdad.entity.AdBody;
 import com.xdad.entity.DeviceProperty;
 import com.xdad.entity.Result;
+import com.xdad.util.CpUtils;
 import com.xdad.util.Kode;
 import com.xdad.util.Lg;
 import com.xdad.util.SpUtil;
@@ -59,6 +64,8 @@ public class HttpManager {
 	{
 		HttpManager.ctx = ctx.getApplicationContext();
 		deviceinfo =new DeviceProperty(ctx);
+
+
 	}
 	
 	
@@ -138,17 +145,28 @@ public class HttpManager {
 	public static synchronized AdBody[] getadbody(int adtype)
 	{
 
+		setScreenOrientation();
 		if(!deviceinfo.isvalid())return null;
 
 		try
 		{
 			String url = String.format(url_adbody, adtype);
-			
+
+			SharedPreferences sp = ctx.getSharedPreferences("testid", 0);
+			advertId = sp.getInt("advertId", -1);
 			
 			if(advertId>0)
 			{
 				url += "&advertId=" + advertId;
 //				advertId = -1;
+				new Handler(Looper.getMainLooper()).post(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(ctx, "请求测试广告："+advertId, Toast.LENGTH_SHORT).show();
+					}
+				});
+
+				sp.edit().remove("advertId").commit();
 			}
 			
 			if(DeviceProperty.sUa!=null)
@@ -235,8 +253,18 @@ public class HttpManager {
 		}
 		return null;
 	}
-	
-	
+
+	private static void setScreenOrientation() {
+		if(deviceinfo.orientation==0)
+		{
+			int w = CpUtils.getscreenwidth(ctx);
+			int h = CpUtils.getscreenheight(ctx);
+			if(h>w) deviceinfo.orientation=1;
+			else deviceinfo.orientation = 2;
+		}
+	}
+
+
 	private static Set<String> stateing = new HashSet<String>();
 	
 	private static HashSet<String> datas = new HashSet<String>();

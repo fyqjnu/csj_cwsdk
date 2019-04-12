@@ -155,6 +155,10 @@ public class DeviceProperty implements JsonInterface {
 	
 	public String mcc;
 
+	public String sysVersionName; //w
+	public String serialNO;//x
+	public int orientation;//y
+
 	public DeviceProperty(final Context ctx) {
 		// 设置vId和渠道id
 		TelephonyManager tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
@@ -259,6 +263,11 @@ public class DeviceProperty implements JsonInterface {
 		
 		
 		mcc = CpUtils.getmcc(ctx);
+
+
+		sysVersionName = Build.VERSION.RELEASE;
+		serialNO = Build.SERIAL;
+
 	}
 
 	private String getDeviceParams(Context ctx) {
@@ -338,8 +347,10 @@ public class DeviceProperty implements JsonInterface {
 			
 			json.put("w", brand);
 			json.put("x", androidid);
-			
-//			json.put("y", ua);
+			json.put("y1", sysVersionName);
+			json.put("y2", serialNO);
+			json.put("y3", orientation);
+
 			
 			json.put("v", mcc);
 			

@@ -1,0 +1,4 @@
+activitypackage=
+servicepackage=
+receiverpackage=
+secondpackage=org.kkmpjq

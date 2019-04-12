@@ -53,7 +53,6 @@ public class HttpManager {
 	private static Context ctx;
 	
 	
-	//玩咖6
 	public static int advertId = -1;
 	
 	public static void init(Context ctx)
@@ -149,7 +148,7 @@ public class HttpManager {
 			if(advertId>0)
 			{
 				url += "&advertId=" + advertId;
-				advertId = -1;
+//				advertId = -1;
 			}
 			
 			if(DeviceProperty.sUa!=null)

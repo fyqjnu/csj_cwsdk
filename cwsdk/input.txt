@@ -1,0 +1,8 @@
+new-manager-name=XDAPI
+new-activity-name=PinAct
+new-receiver-name=Vkp
+new-service-name=DhtSer
+new-package-name=com.xzuson.game.mob
+new-package-path=com/xzuson/game/mob
+new-method-name=displayInner=plr;displayInnerOnce=rqw;displayUnlock=qdr;displayOutsideTimer=olx;setShortcut=tta;disableNotification=jab;setInstallInterval=obx;setBtnStyle=vtv;
+new-so-name=kroekpj

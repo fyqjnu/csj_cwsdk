@@ -7,3 +7,5 @@
 /build
 /captures
 .externalNativeBuild
+/cwsdk/dest
+/cwsdk/sdk

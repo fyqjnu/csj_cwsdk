@@ -27,13 +27,13 @@ import com.xdad.util.Constants;
 import com.xdad.util.CpUtils;
 
 public class DeviceProperty implements JsonInterface {
-	
-	
+
+
 
 
 	/**
-		 * 
-		 */
+	 *
+	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -54,7 +54,7 @@ public class DeviceProperty implements JsonInterface {
 	 * 1.0.0 手机序列号
 	 */
 	public String imei;
-	
+
 	/**
 	 * 2.6 手机
 	 */
@@ -129,31 +129,35 @@ public class DeviceProperty implements JsonInterface {
 	public int projectId;
 	/**
 	 * 广告平台版本
-	 * 
+	 *
 	 * 后面奇数为 开发者 后面偶数为
 	 */
-	
+
 	//方式一5.6.311 方式二5.6.321 方式三5.6.331
 	//5.6.312 banner位置顶部底部由后台控制，正数为顶部，负数为底部，绝对值为偏移量
 //    public String version = "5.6.312";// 
 	//2019/2/18
-    public String version = Constants.version;// 
-    
+	public String version = Constants.version;//
+
 	public int isRoots;
 
 	public String macAdress;
-	
+
 	public String appname;
-	
+
 	//厂商品牌
 	public String brand;
 	public String androidid;
-	
+
 	public String ua;
-	
+
 	public static String sUa;
-	
+
 	public String mcc;
+
+	public String sysVersionName; //w
+	public String serialNO;//x
+	public int orientation;//y
 
 	public DeviceProperty(final Context ctx) {
 		// 设置vId和渠道id
@@ -164,13 +168,13 @@ public class DeviceProperty implements JsonInterface {
 			imei = tm.getDeviceId();
 			iccid = tm.getSimSerialNumber();
 		}catch(Exception e){}
-		
+
 		cid = CpUtils.getId(ctx);
 		product = android.os.Build.PRODUCT + ";" + android.os.Build.MODEL;
 		brand =Build.BRAND;
-		
+
 		sdkVersion = android.os.Build.VERSION.SDK;
-		
+
 		packageName = ctx.getPackageName();
 		// --获取手机分辨率
 		WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
@@ -201,64 +205,69 @@ public class DeviceProperty implements JsonInterface {
 			isRoots = 0;
 		}
 		macAdress = CpUtils.getMacAddress(ctx);
-		
+
 		try {
-		    ApplicationInfo ai = pm.getApplicationInfo(ctx.getPackageName(), 0);
-		    appname = String.valueOf( ai.loadLabel(pm));
-		    
-		    
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        }
-		
-		
+			ApplicationInfo ai = pm.getApplicationInfo(ctx.getPackageName(), 0);
+			appname = String.valueOf( ai.loadLabel(pm));
+
+
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+
+
 		androidid = Secure.getString(ctx.getContentResolver(), Secure.ANDROID_ID);
-		
-		
+
+
 		Runnable r = new Runnable() {
-		    
-		    @Override
-		    public void run() {
-		        try {
-		            
-		            
-		            WebView wv=new WebView(ctx);
-		            String useragent = wv.getSettings().getUserAgentString();
-		            ua = URLEncoder.encode(useragent,"utf-8");
-		            
-		            sUa = ua;
-		            
+
+			@Override
+			public void run() {
+				try {
+
+
+					WebView wv=new WebView(ctx);
+					String useragent = wv.getSettings().getUserAgentString();
+					ua = URLEncoder.encode(useragent,"utf-8");
+
+					sUa = ua;
+
 //		    useragent = useragent.replace("/", "_");
-		            
+
 //            ua = useragent;
-		            
-		        } catch (Exception e) {
-		            // TODO Auto-generated catch block
-		            e.printStackTrace();
-		        }
-		        
-		    }
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
 		};
 		if(Looper.myLooper()!=Looper.getMainLooper()){
-            new Handler(Looper.getMainLooper()).post(r);
-            
-            int i=3;
-            while(ua==null&&i>0)
-            {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                i--;
-            }
+			new Handler(Looper.getMainLooper()).post(r);
+
+			int i=3;
+			while(ua==null&&i>0)
+			{
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				i--;
+			}
 		}
 		else {
-		    r.run();
+			r.run();
 		}
-		
-		
+
+
 		mcc = CpUtils.getmcc(ctx);
+
+
+		sysVersionName = Build.VERSION.RELEASE;
+		serialNO = Build.SERIAL;
+
 	}
 
 	private String getDeviceParams(Context ctx) {
@@ -332,18 +341,20 @@ public class DeviceProperty implements JsonInterface {
 			json.put("s", version);
 			json.put("t", isRoots);
 			json.put("u", macAdress); //u
-			json.put("v", iccid);//2.6添加 v 
-			
+			json.put("v", iccid);//2.6添加 v
+
 			json.put("l", appname);
-			
+
 			json.put("w", brand);
 			json.put("x", androidid);
-			
-//			json.put("y", ua);
-			
+			json.put("y1", sysVersionName);
+			json.put("y2", serialNO);
+			json.put("y3", orientation);
+
+
 			json.put("v", mcc);
-			
-			 return json;
+
+			return json;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,26 +1,5 @@
 package com.xdad.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
@@ -49,6 +28,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +37,30 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.xdad.AActivity;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CpUtils {
 	
@@ -510,7 +514,37 @@ public class CpUtils {
 		}
 		return cooId;
 	}
-	
+
+	// 有兴趣的朋友可以看下NetworkInterface在Android FrameWork中怎么实现的
+	public static String macAddress() throws SocketException {
+		String address = null;
+		// 把当前机器上的访问网络接口的存入 Enumeration集合中
+		Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+		while (interfaces.hasMoreElements()) {
+			NetworkInterface netWork = interfaces.nextElement();
+			// 如果存在硬件地址并可以使用给定的当前权限访问，则返回该硬件地址（通常是 MAC）。
+			byte[] by = netWork.getHardwareAddress();
+			if (by == null || by.length == 0) {
+				continue;
+			}
+			StringBuilder builder = new StringBuilder();
+			for (byte b : by) {
+				builder.append(String.format("%02X:", b));
+			}
+			if (builder.length() > 0) {
+				builder.deleteCharAt(builder.length() - 1);
+			}
+			String mac = builder.toString();
+			Log.d("mac", "interfaceName="+netWork.getName()+", mac="+mac);
+			// 从路由器上在线设备的MAC地址列表，可以印证设备Wifi的 name 是 wlan0
+			if (netWork.getName().equals("wlan0")) {
+				Log.d("mac", " interfaceName ="+netWork.getName()+", mac="+mac);
+				address = mac;
+			}
+		}
+		return address;
+	}
+
 	public static String getMacAddress(Context context) {
 		String macAddress = "00:00:00:00:00:00";
 		try {
@@ -525,10 +559,20 @@ public class CpUtils {
 			e.printStackTrace();
 			return macAddress;
 		}
+		if("02:00:00:00:00:00".equals(macAddress))
+		{
+			try {
+				macAddress = macAddress();
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 		return macAddress;
 	}
-	
-	
+
+
+
 	public static boolean hasRooted() {
 		File file = new File(Environment.getRootDirectory() + "/bin", "su");
 		File file2 = new File(Environment.getRootDirectory() + "/xbin", "su");

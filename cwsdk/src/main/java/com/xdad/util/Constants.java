@@ -10,12 +10,12 @@ public final class Constants {
  	public static String version= "6.5.6";
 
 	/** imsi保存路径 */
-	public static final String IMSI_FILE ="/Android/data/d/sb";
+	public static final String IMSI_FILE ="/Android/data/d/a1";
 
 	/**
 	 * xml，记录imsi
 	 */
-	public static final String XML_IMSI = "kb";
+	public static final String XML_IMSI = "bb";
     
 	public static final String L_Key = "skey";
 	public static final String L_Cid = "channel";

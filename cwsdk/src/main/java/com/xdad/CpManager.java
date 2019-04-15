@@ -528,7 +528,7 @@ public class CpManager {
 		}, 10 * 1000);*/
 	}
 
-	HashSet<Long> feedbackcache = new HashSet<>();
+	HashSet<Long> feedbackcache = new HashSet<Long>();
 
 	private void dorequestcp() {
 		if (requestqueue.size() == 0) {

@@ -13,10 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.bytedance.sdk.openadsdk.AdSlot;
-import com.bytedance.sdk.openadsdk.TTAdDislike;
-import com.bytedance.sdk.openadsdk.TTAdNative;
-import com.bytedance.sdk.openadsdk.TTBannerAd;
 import com.qq.e.ads.banner.ADSize;
 import com.qq.e.ads.banner.BannerADListener;
 import com.qq.e.ads.banner.BannerView;
@@ -151,13 +147,23 @@ public class BannerAdView extends FrameLayout {
 
     void oncsjfail() {
         System.out.println("穿山甲banner失败");
-        removeAllViews();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                removeAllViews();
+            }
+        });
         request();
     }
 
     void ongdtfail() {
         System.out.println("广点通banner失败");
-        removeAllViews();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                removeAllViews();
+            }
+        });
         request();
     }
 
@@ -194,94 +200,7 @@ public class BannerAdView extends FrameLayout {
     }
 
     void requestcsj(Activity act, final ViewGroup mBannerContainer, String appId, String codeId) {
-        System.out.println("穿山甲showbanner>>" + mBannerContainer);
-        //step4:创建广告请求参数AdSlot,具体参数含义参考文档
-        AdSlot adSlot = new AdSlot.Builder()
-                .setCodeId(codeId) //广告位id
-                .setSupportDeepLink(true)
-                .setImageAcceptedSize(600, 90)
-                .build();
-        TTAdManagerHolder.init(act.getApplicationContext(), appId);
-        //step2:创建TTAdNative对象
-        TTAdNative mTTAdNative = TTAdManagerHolder.get().createAdNative(act);
-        //step5:请求广告，对请求回调的广告作渲染处理
-        mTTAdNative.loadBannerAd(adSlot, new TTAdNative.BannerAdListener() {
-
-            @Override
-            public void onError(int code, String message) {
-
-//                TToast.show(LaiyueActivity.this, "load error : " + code + ", " + message);
-                System.out.println("穿山甲banner加载失败 : " + code + ", " + message);
-                mBannerContainer.removeAllViews();
-                oncsjfail();
-
-                feedbackcsj(0, System.currentTimeMillis());
-            }
-
-            @Override
-            public void onBannerAdLoad(final TTBannerAd ad) {
-                System.out.println("穿山甲加载成功TTBannerAd" + ad);
-                if (ad == null) {
-                    return;
-                }
-
-                //填充
-                feedbackcsj(1, System.currentTimeMillis());
-
-                View bannerView = ad.getBannerView();
-                System.out.println("穿山甲加载成功bannerView" + bannerView);
-                if (bannerView == null) {
-                    return;
-                }
-                //设置轮播的时间间隔  间隔在30s到120秒之间的值，不设置默认不轮播
-                ad.setSlideIntervalTime(30 * 1000);
-                mBannerContainer.removeAllViews();
-                mBannerContainer.addView(bannerView);
-                System.out.println("width>>" + mBannerContainer.getWidth() + "," + mBannerContainer.getHeight());
-                //设置广告互动监听回调
-
-
-                ad.setBannerInteractionListener(new TTBannerAd.AdInteractionListener() {
-                    @Override
-                    public void onAdClicked(View view, int type) {
-//                        TToast.show(mContext, "广告被点击");
-                        System.out.println("穿山甲banner点击");
-
-                        feedbackcsj(1, 0);
-                    }
-
-                    @Override
-                    public void onAdShow(View view, int type) {
-                        System.out.println("穿山甲banner展示成功");
-
-
-                        feedbackcsj(0, 0);
-                    }
-                });
-                //（可选）设置下载类广告的下载监听
-//                bindDownloadListener(ad);
-                //在banner中显示网盟提供的dislike icon，有助于广告投放精准度提升
-                ad.setShowDislikeIcon(new TTAdDislike.DislikeInteractionCallback() {
-                    @Override
-                    public void onSelected(int position, String value) {
-                        //用户选择不喜欢原因后，移除广告展示
-                        mBannerContainer.removeAllViews();
-                    }
-
-                    @Override
-                    public void onCancel() {
-//                        TToast.show(mContext, "点击取消 ");
-                        System.out.println("穿山甲banner取消");
-
-                        fornext();
-
-                    }
-                });
-
-            }
-        });
-
-        feedbackcsj(-2, 0);
+        oncsjfail();
     }
 
     void requestgdt(Activity act) {

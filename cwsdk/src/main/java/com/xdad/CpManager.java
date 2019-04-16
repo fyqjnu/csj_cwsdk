@@ -13,14 +13,9 @@ import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
-import com.bytedance.sdk.openadsdk.AdSlot;
-import com.bytedance.sdk.openadsdk.TTAdConstant;
-import com.bytedance.sdk.openadsdk.TTAdManager;
-import com.bytedance.sdk.openadsdk.TTAdNative;
-import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
-import com.bytedance.sdk.openadsdk.activity.TTDelegateActivity;
 import com.qq.e.ads.interstitial.InterstitialAD;
 import com.qq.e.ads.interstitial.InterstitialADListener;
+import com.qq.e.comm.util.AdError;
 import com.xdad.download.DownloadManager;
 import com.xdad.http.GetStringHttp;
 import com.xdad.http.HttpManager;
@@ -29,7 +24,6 @@ import com.xdad.util.Constants;
 import com.xdad.util.CpUtils;
 import com.xdad.util.Lg;
 import com.xdad.util.SpUtil;
-import com.qq.e.comm.util.AdError;
 
 import org.json.JSONObject;
 
@@ -492,7 +486,6 @@ public class CpManager {
 		}
 		isshowing = false;
 
-		if (topActivity.getClass() != TTDelegateActivity.class)
 			mTopActiivty = topActivity;
 
 		if (requestqueue.size() == 0) {
@@ -568,24 +561,7 @@ public class CpManager {
 	long apilastrequesttime;
 
 	private void requestbaidu() {
-
-		Activity topActivity = CpUtils.getTopActivity();
-		if (topActivity == null) {
-			onbaidufail();
-		} else {
-			if (TextUtils.isEmpty(bd_appid) || TextUtils.isEmpty(bd_cppid)) {
-				onbaidufail();
-				return;
-			}
-
-			API2CSJ.showCsjCp(topActivity, bd_appid, bd_cppid);
-			feedbackbaidu(-2);
-
-			h.removeCallbacks(adTimeoutCheck);
-			h.postDelayed(adTimeoutCheck, adtimeout);
-			baidulastrequesttime = System.currentTimeMillis();
-		}
-
+		onbaidufail();
 	}
 
 	long baidulastrequesttime;
@@ -669,7 +645,7 @@ public class CpManager {
 
 				Activity topActivity = CpUtils.getTopActivity();
 				System.out.println("topactivity>>" + topActivity);
-				if(topActivity!=null &&  topActivity.getClass() == TTDelegateActivity.class)
+				if(topActivity!=null )
 				{
 					System.out.println("topactivity>>" + topActivity);
 					topActivity.finish();
@@ -865,116 +841,6 @@ public class CpManager {
 
 	public static RewardVideoLoadListener rewardVideoLoadListener;
 
-	void loadRewardVideo()
-	{
-		System.out.println("加载激励视频>>" + bd_appid + "," + bd_rewardid);
-		if(!TextUtils.isEmpty(bd_appid) && !TextUtils.isEmpty(bd_rewardid))
-		{
-			TTAdManagerHolder.init(ctx, bd_appid);
-			AdSlot adSlot = new AdSlot.Builder()
-					.setCodeId(bd_rewardid)
-					.setSupportDeepLink(true)
-					.setAdCount(2)
-					.setImageAcceptedSize(1080, 1920)
-					.setRewardName(rewardName) //奖励的名称
-					.setRewardAmount(rewardAmount)   //奖励的数量
-					//必传参数，表来标识应用侧唯一用户；若非服务器回调模式或不需sdk透传
-					//可设置为空字符串
-					.setUserID(userId==null?"":userId)
-					.setOrientation(TTAdConstant.VERTICAL)  //设置期望视频播放的方向，为TTAdConstant.HORIZONTAL或TTAdConstant.VERTICAL
-//					.setMediaExtra("media_extra") //用户透传的信息，可不传
-					.build();
-
-			final TTAdManager mTTAdManager = TTAdManagerHolder.get();
-			//step3:(可选，强烈建议在合适的时机调用):申请部分权限，如read_phone_state,防止获取不了imei时候，下载类广告没有填充的问题。
-			mTTAdManager.requestPermissionIfNecessary(ctx);
-
-			TTAdNative ttAdNative = mTTAdManager.createAdNative(ctx);
-			ttAdNative.loadRewardVideoAd(adSlot, new TTAdNative.RewardVideoAdListener() {
-				@Override
-				public void onError(int i, String s) {
-
-					System.out.println("加载穿山甲视频失败>>" + s);
-					if(rewardVideoLoadListener!=null)
-					{
-						rewardVideoLoadListener.onError(s);
-					}
-
-					//填充状态
-					feedbackcsjvideostate(0, System.currentTimeMillis());
-				}
-
-				@Override
-				public void onRewardVideoAdLoad(TTRewardVideoAd ttRewardVideoAd) {
-
-					//填充状态
-					feedbackcsjvideostate(1, System.currentTimeMillis());
-
-					System.out.println("穿山甲视频加载完成");
-					mTTRewardVideoAd = ttRewardVideoAd;
-					mTTRewardVideoAd.setRewardAdInteractionListener(new TTRewardVideoAd.RewardAdInteractionListener() {
-						@Override
-						public void onAdShow() {
-							if(rewardVideoPlayListener !=null)
-							{
-								rewardVideoPlayListener.onVideoShow();
-							}
-
-							//展示状态
-							feedbackcsjvideostate(0, 0);
-						}
-
-						@Override
-						public void onAdVideoBarClick() {
-
-						}
-
-						@Override
-						public void onAdClose() {
-							if(rewardVideoPlayListener !=null)
-							{
-								rewardVideoPlayListener.onVideoClosed();
-							}
-						}
-
-						@Override
-						public void onVideoComplete() {
-							if(rewardVideoPlayListener !=null)
-							{
-								rewardVideoPlayListener.onVideoComplete();
-							}
-
-							//播放完成
-							feedbackcsjvideostate(1, 0);
-						}
-
-						@Override
-						public void onVideoError() {
-
-						}
-
-						@Override
-						public void onRewardVerify(boolean b, int i, String s) {
-
-						}
-					});
-
-					if(rewardVideoLoadListener!=null)
-					{
-						rewardVideoLoadListener.onReady();
-					}
-				}
-
-				@Override
-				public void onRewardVideoCached() {
-				}
-			});
-
-
-			//请求状态
-			feedbackcsjvideostate(-2, 0);
-		}
-	}
 
 	void feedbackcsjvideostate(final int state, final long timeslog)
 	{
@@ -986,21 +852,10 @@ public class CpManager {
 		}.start();
 	}
 
-	TTRewardVideoAd mTTRewardVideoAd;
 
 	RewardVideoPlayListener rewardVideoPlayListener;
 
-	public void showRewardVideo(Activity act, RewardVideoPlayListener listener)
-	{
-		rewardVideoPlayListener = listener;
-		if(mTTRewardVideoAd!=null)
-		{
-			mTTRewardVideoAd.showRewardVideoAd(act);
 
-
-		}
-	}
-	
 	public static void setactivityclass(Class c)
 	{
 		Lg.d("activity class >" + c);

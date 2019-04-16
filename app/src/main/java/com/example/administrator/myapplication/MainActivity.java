@@ -3,14 +3,11 @@ package com.example.administrator.myapplication;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.xdad.BannerAdView;
 import com.xdad.XDAPI;
-import com.xdad.RewardVideoLoadListener;
-import com.xdad.RewardVideoPlayListener;
 
 
 public class MainActivity extends Activity {
@@ -27,39 +24,6 @@ public class MainActivity extends Activity {
 
 
 
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                XDAPI.loadRewardVideo("x", "金币", 100, new RewardVideoLoadListener() {
-                    @Override
-                    public void onReady() {
-                        System.out.println("激励视频加载成功");
-                        XDAPI.showRewardVideo(MainActivity.this, new RewardVideoPlayListener() {
-                            @Override
-                            public void onVideoComplete() {
-                                System.out.println("激励视频播放完成");
-                            }
-
-                            @Override
-                            public void onVideoClosed() {
-                                System.out.println("激励视频关闭");
-                            }
-
-                            @Override
-                            public void onVideoShow() {
-                                System.out.println("激励视频开始播放");
-                            }
-                        });
-                    }
-
-
-                    @Override
-                    public void onError(String msg) {
-                        System.out.println("激励视频加载失败>>" + msg);
-                    }
-                });
-            }
-        });
 /*
 
         System.out.println("goname>>" + name);

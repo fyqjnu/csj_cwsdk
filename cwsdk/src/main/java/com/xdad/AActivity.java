@@ -330,11 +330,6 @@ public class AActivity extends Activity  {
 		}
 		else if("3".equals(first))
 		{
-			if(!TextUtils.isEmpty(csj_appid) && !TextUtils.isEmpty(csj_splashpid))
-			{
-				hasreqeust = true;
-				requestcsj(csj_appid, csj_splashpid);
-			}
 		}
 		else
 		{
@@ -509,10 +504,7 @@ public class AActivity extends Activity  {
 	}
 	
 	
-	void requestcsj(String appid, String codeid)
-	{
-		API2CSJ.showCsjSplash(this, appid, codeid);
-	}
+
 	
 	 void requestgdt(String appid, String pid)
 	{

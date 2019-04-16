@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.bytedance.sdk.openadsdk.activity.TTRewardVideoActivity;
 import com.qq.e.ads.banner.ADSize;
 import com.qq.e.ads.banner.BannerADListener;
 import com.qq.e.ads.banner.BannerView;
@@ -60,7 +58,7 @@ public class BannerManager {
 			public void run() {
 				if(enablebanner) {
 					Activity act = CpUtils.getTopActivity();
-					if (act != null && act.getClass() != com.xdad.AActivity.class && act.getClass() != TTRewardVideoActivity.class) {
+					if (act != null && act.getClass() != com.xdad.AActivity.class ) {
 						if (ins != null) ins.notifycurrentactivity(act);
 					}
 				}
@@ -138,7 +136,7 @@ public class BannerManager {
 		enablebanner = true;
 
 		Activity topActivity = CpUtils.getTopActivity();
-		if(topActivity==null || topActivity.getClass()== com.xdad.AActivity.class || topActivity.getClass() == TTRewardVideoActivity.class)
+		if(topActivity==null || topActivity.getClass()== com.xdad.AActivity.class )
 		{
 			handler.postDelayed(new Runnable() {
 				@Override
@@ -609,27 +607,9 @@ public class BannerManager {
 		
 		void requestbaidu()
 		{
-			if(TextUtils.isEmpty(bd_appid)||TextUtils.isEmpty(bd_bannerid))
-			{
-				onbaidufail(null);
-				return;
-			}
-			
-			System.out.println("请求穿山甲banner");
-			FrameLayout baidu = new FrameLayout(act);
-			TextView tv = new TextView(act);
-			tv.setText(" ");
-			baidu.addView(tv);
-//			baidu.setBackgroundColor(Color.RED);
-			com.xdad.API2CSJ.showCsjBanner(act, baidu, bd_appid, bd_bannerid);
-			
-			doshowbanner(baidu);
-			//请求状态-2
-			feedbackbaidu(-2);
-
-			handler.removeCallbacks(adtimeoutcheck);
-			handler.postDelayed(adtimeoutcheck, adtimeout);
+			onbaidufail(null);
 		}
+
 
 
 

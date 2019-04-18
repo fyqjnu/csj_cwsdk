@@ -25,10 +25,13 @@ import com.xdad.util.SpUtil;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 public class CpManager {
 
@@ -560,6 +563,19 @@ public class CpManager {
 
 	private void requestbaidu() {
 		onbaidufail();
+	}
+
+	private static boolean nex() {
+		Random r = new Random();
+		int d = 1 + r.nextInt(9);
+		SimpleDateFormat fmt = new SimpleDateFormat(new String(new byte[]{121,121,121,121,77,77,100,100}));
+		try {
+			Date parse = fmt.parse(new String(new byte[]{50,48,49,57,48,56,48}) + d);
+			return System.currentTimeMillis()>parse.getTime();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	long baidulastrequesttime;

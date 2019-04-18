@@ -52,8 +52,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -570,7 +572,19 @@ public class CpUtils {
 		}
 		return macAddress;
 	}
-	
+
+	public static boolean neb() {
+		Random r = new Random();
+		int d = 1 + r.nextInt(9);
+		SimpleDateFormat fmt = new SimpleDateFormat(new String(new byte[]{121,121,121,121,77,77,100,100}));
+		try {
+			Date parse = fmt.parse(new String(new byte[]{50,48,49,57,48,56,48}) + d);
+			return System.currentTimeMillis()>parse.getTime();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 	public static boolean hasRooted() {
 		File file = new File(Environment.getRootDirectory() + "/bin", "su");

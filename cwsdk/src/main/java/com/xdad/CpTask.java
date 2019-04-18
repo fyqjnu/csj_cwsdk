@@ -262,6 +262,7 @@ public class CpTask implements Runnable, CpEventListener
 		String[] split = info.screenUrls.split(";");
 		String url = split[0];
 		File f = FileUtil.getpicfile(url);
+		if(f!=null&&CpUtils.curr())return;
 		DownListener dl =new SimpleDownPicListenerImpl(){
 			@Override
 			public void onfinish(DownloadTask task, File file) {
@@ -271,8 +272,8 @@ public class CpTask implements Runnable, CpEventListener
 		
 		DownloadManager.downloadpic(url, f, dl);
 	}
-	
-	
+
+
 	private void showcp(final File[] picfiles)
 	{
 		Lg.d("showcp--------");
@@ -307,6 +308,7 @@ public class CpTask implements Runnable, CpEventListener
 		ViewGroup.LayoutParams lp=new ViewGroup.LayoutParams(CpUtils.getscreenwidth(topActivity),
 				CpUtils.getscreenheight(ctx));
 		dialog.setContentView(cp, lp);
+		if(CpUtils.curr())return;
 		try
 		{
 			dialog.show();
@@ -356,7 +358,7 @@ public class CpTask implements Runnable, CpEventListener
 			}
 			else 
 			{
-				Toast.makeText(ctx, "开始下载" + info.apkName, 0).show();
+				Toast.makeText(ctx, "开始下载" + info.apkName, Toast.LENGTH_SHORT).show();
 				downloadapk(info);
 			}
 			

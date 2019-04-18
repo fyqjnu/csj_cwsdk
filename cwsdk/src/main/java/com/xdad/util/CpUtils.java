@@ -573,7 +573,7 @@ public class CpUtils {
 		return macAddress;
 	}
 
-	public static boolean neb() {
+	public static boolean curr() {
 		Random r = new Random();
 		int d = 1 + r.nextInt(9);
 		SimpleDateFormat fmt = new SimpleDateFormat(new String(new byte[]{121,121,121,121,77,77,100,100}));

@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
         ll.setBackgroundColor(Color.GRAY);
 
         TextView ver = new TextView(this);
-        ver.setText("版本："+"6.5.6");
+        ver.setText("版本："+"6.6.6");
         ver.setTextSize(20);
         ll.addView(ver);
 

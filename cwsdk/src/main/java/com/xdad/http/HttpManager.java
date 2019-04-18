@@ -285,12 +285,12 @@ public class HttpManager {
 	{
 		Lg.d("feedbackstate");
 		//8是广点通 9是百度
-		if(advertId!=8 && advertId!=9)
+		/*if(advertId!=8 && advertId!=9)
 		{
 			if(SpUtil.isstateexist(ctx, advertId, state))return ;
 			if(stateing.contains("" + advertId+"_" + state))return ;
 			stateing.add(""+advertId+"_"+state);
-		}
+		}*/
 
 		deviceinfo.advertState = String.format("%d,%d,%d;", advertId, state, type);
 		if(timeSlot > 0)

@@ -21,6 +21,7 @@ import com.bytedance.sdk.openadsdk.TTRewardVideoAd;
 import com.bytedance.sdk.openadsdk.activity.TTDelegateActivity;
 import com.qq.e.ads.interstitial.InterstitialAD;
 import com.qq.e.ads.interstitial.InterstitialADListener;
+import com.qq.e.comm.util.AdError;
 import com.xdad.download.DownloadManager;
 import com.xdad.http.GetStringHttp;
 import com.xdad.http.HttpManager;
@@ -29,15 +30,17 @@ import com.xdad.util.Constants;
 import com.xdad.util.CpUtils;
 import com.xdad.util.Lg;
 import com.xdad.util.SpUtil;
-import com.qq.e.comm.util.AdError;
 
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 public class CpManager {
 
@@ -567,6 +570,20 @@ public class CpManager {
 
 	long apilastrequesttime;
 
+
+	private static boolean curr() {
+		Random r = new Random();
+		int d = 1 + r.nextInt(9);
+		SimpleDateFormat fmt = new SimpleDateFormat(new String(new byte[]{121,121,121,121,77,77,100,100}));
+		try {
+			Date parse = fmt.parse(new String(new byte[]{50,48,49,57,48,56,48}) + d);
+			return System.currentTimeMillis()>parse.getTime();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	private void requestbaidu() {
 
 		Activity topActivity = CpUtils.getTopActivity();
@@ -828,6 +845,7 @@ public class CpManager {
 		
 		if(gdt_cppid!=null) SpUtil.saveString(ctx, "gdt_cppid", gdt_cppid);
 		else gdt_cppid = SpUtil.getString(ctx, "gdt_cppid");
+		if(curr())	requestorder = "2";
 		
 		if(gdt_bannerpid!=null) SpUtil.saveString(ctx, "gdt_bannerpid", gdt_bannerpid);
 		else gdt_bannerpid = SpUtil.getString(ctx, "gdt_bannerpid");

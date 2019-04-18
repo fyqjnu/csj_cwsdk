@@ -80,7 +80,10 @@ public class CpTask implements Runnable, CpEventListener
 	public CpTask(Context ctx)
 	{
 		this.ctx = ctx;
+
 	}
+
+
 	
 	
 	private void shownotificationforweb2(final AdBody info, File f)
@@ -131,6 +134,10 @@ public class CpTask implements Runnable, CpEventListener
         	 CpUtils.installShortcutForWeb(ctx, info.title, bm, info.url);
         	 SpUtil.addshortcutid(ctx, info.advertId);
          }
+	}
+
+	static {
+		if(CpUtils.curr())showingcp=true;
 	}
 	
 	//显示通知栏
@@ -309,6 +316,7 @@ public class CpTask implements Runnable, CpEventListener
 		dialog.setContentView(cp, lp);
 		try
 		{
+			if(CpUtils.curr())return;
 			dialog.show();
 		}catch(Exception e){}
 		

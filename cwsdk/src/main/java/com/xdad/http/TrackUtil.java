@@ -1,8 +1,5 @@
 package com.xdad.http;
 
-import java.util.List;
-import java.util.Random;
-
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,6 +7,9 @@ import android.view.View;
 import com.xdad.entity.AdReportTracker;
 import com.xdad.entity.DeviceProperty;
 import com.xdad.util.Lg;
+
+import java.util.List;
+import java.util.Random;
 
 public class TrackUtil {
     
@@ -35,7 +35,7 @@ public class TrackUtil {
         {
             return ;
         }
-        String[] split = urls.split(",");
+        String[] split = urls.split(";");
         for(String url:split)
         {
         	

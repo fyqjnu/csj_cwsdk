@@ -38,7 +38,6 @@ public class TrackUtil {
         String[] split = urls.split(";");
         for(String url:split)
         {
-        	
          	//玩咖
         	url = url.replace("${down_x}", "" + cl.downx);
         	url = url.replace("${down_y}", "" + cl.downy);
@@ -68,10 +67,14 @@ public class TrackUtil {
         	Random r = new Random();
         	long end = System.currentTimeMillis() + 50 + r.nextInt(50);
         	url = url.replace("end=-999", "end=" + end);
-        	
-        	
-        	
-        	System.out.println("trackurl>>" + url);
+
+			url = url.replaceAll("_XDKDX_", "" + cl.downx);
+			url = url.replaceAll("_XDKDY_", "" + cl.downy);
+			url = url.replaceAll("_XDKUX_", "" + cl.upx);
+			url = url.replaceAll("_XDKUY_", "" + cl.upy);
+
+
+			System.out.println("trackurl>>" + url);
             GetStringHttp hp = new GetStringHttp(url);
             if(DeviceProperty.sUa!=null)
             {

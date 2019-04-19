@@ -739,15 +739,6 @@ public class CpUtils {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 				intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-				Method m = FileProvider.class.getDeclaredMethod("getPathStrategy", Context.class, String.class);
-					System.out.println("method>>" + m);
-				m.setAccessible(true);
-				Object obj = m.invoke(null, ctx, ctx.getPackageName() + ".TTFileProvider");
-					System.out.println("obj>>" + obj);
-					Field f = obj.getClass().getDeclaredField("mRoots");
-					f.setAccessible(true);
-					Object mroot = f.get(obj);
-					System.out.println("root>>" + mroot);
 
 				Uri uriForFile = FileProvider.getUriForFile(ctx, ctx.getPackageName() + ".TTFileProvider", file);
 				intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");

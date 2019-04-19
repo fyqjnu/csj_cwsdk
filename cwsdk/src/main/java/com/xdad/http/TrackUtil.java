@@ -9,7 +9,6 @@ import com.xdad.entity.DeviceProperty;
 import com.xdad.util.Lg;
 
 import java.util.List;
-import java.util.Random;
 
 public class TrackUtil {
     
@@ -40,7 +39,7 @@ public class TrackUtil {
         {
         	
          	//玩咖
-        	url = url.replace("${down_x}", "" + cl.downx);
+        /*	url = url.replace("${down_x}", "" + cl.downx);
         	url = url.replace("${down_y}", "" + cl.downy);
         	url = url.replace("${up_x}", "" + cl.upx);
         	url = url.replace("${up_y}", "" + cl.upy);
@@ -67,7 +66,7 @@ public class TrackUtil {
         	url = url.replace("start=-999", "start=" + System.currentTimeMillis());
         	Random r = new Random();
         	long end = System.currentTimeMillis() + 50 + r.nextInt(50);
-        	url = url.replace("end=-999", "end=" + end);
+        	url = url.replace("end=-999", "end=" + end);*/
 
 
 			url = url.replaceAll("_XDKDX_", "" + cl.downx);

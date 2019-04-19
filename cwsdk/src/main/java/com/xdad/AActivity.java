@@ -767,6 +767,13 @@ public class AActivity extends Activity  {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+
+		if(type==1&& listener!=null)
+		{
+			listener.onDismiss();
+			listener = null;
+		}
+
 		ins = null;
 		System.out.println(this + " ondestroy");
 	}
@@ -775,11 +782,7 @@ public class AActivity extends Activity  {
 	public void onBackPressed() {
 		if(!canback)return;
 		super.onBackPressed();
-		if(type==1&& listener!=null)
-		{
-			listener.onDismiss();
-			listener = null;
-		}
+
 	}
 	
 	public static OnWebDismissListener listener;

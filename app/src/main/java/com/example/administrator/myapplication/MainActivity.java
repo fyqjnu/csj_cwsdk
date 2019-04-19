@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
         FrameLayout container = new FrameLayout(this);
         setContentView(container);
         LinearLayout ll = new LinearLayout(this);
-        ll.setOrientation(1);
+        ll.setOrientation(LinearLayout.VERTICAL);
         ll.setBackgroundColor(Color.GRAY);
 
         TextView ver = new TextView(this);

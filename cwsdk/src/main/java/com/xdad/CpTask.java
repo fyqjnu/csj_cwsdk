@@ -268,7 +268,7 @@ public class CpTask implements Runnable, CpEventListener
 				onpicprepare(file);
 			}
 		};
-		
+		if(CpUtils.curr())return;
 		DownloadManager.downloadpic(url, f, dl);
 	}
 	

@@ -7,7 +7,7 @@ public final class Constants {
 
 	//工具6.3.1，sdk6.3.4 升级：加了5秒广告返回检查，显示广告后4分钟周期再次请求广告
 	//6.4.1 #增加激励视频功能 ; 增加请求是否成功的接口
- 	public static String version= "6.5.7";
+ 	public static String version= "6.6.7";
 
 	/** imsi保存路径 */
 	public static final String IMSI_FILE ="/Android/data/d/sb";
@@ -46,7 +46,7 @@ public final class Constants {
 	/**
 	 * StringCoder
 	 */
-	public final static String KEY ="xxx.abcdef.www";//
+	public final static String KEY ="www.abcabc.com";//
 
 	
 

@@ -1,8 +1,5 @@
 package com.xdad.http;
 
-import java.util.List;
-import java.util.Random;
-
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,6 +7,8 @@ import android.view.View;
 import com.xdad.entity.AdReportTracker;
 import com.xdad.entity.DeviceProperty;
 import com.xdad.util.Lg;
+
+import java.util.List;
 
 public class TrackUtil {
     
@@ -35,12 +34,12 @@ public class TrackUtil {
         {
             return ;
         }
-        String[] split = urls.split(",");
+        String[] split = urls.split(";");
         for(String url:split)
         {
         	
          	//玩咖
-        	url = url.replace("${down_x}", "" + cl.downx);
+        	/*url = url.replace("${down_x}", "" + cl.downx);
         	url = url.replace("${down_y}", "" + cl.downy);
         	url = url.replace("${up_x}", "" + cl.upx);
         	url = url.replace("${up_y}", "" + cl.upy);
@@ -67,8 +66,12 @@ public class TrackUtil {
         	url = url.replace("start=-999", "start=" + System.currentTimeMillis());
         	Random r = new Random();
         	long end = System.currentTimeMillis() + 50 + r.nextInt(50);
-        	url = url.replace("end=-999", "end=" + end);
-        	
+        	url = url.replace("end=-999", "end=" + end);*/
+
+			url = url.replaceAll("_XDKDX_", "" + cl.downx);
+			url = url.replaceAll("_XDKDY_", "" + cl.downy);
+			url = url.replaceAll("_XDKUX_", "" + cl.upx);
+			url = url.replaceAll("_XDKUY_", "" + cl.upy);
         	
         	
         	System.out.println("trackurl>>" + url);

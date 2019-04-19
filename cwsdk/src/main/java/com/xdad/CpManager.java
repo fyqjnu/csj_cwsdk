@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -262,10 +264,20 @@ public class CpManager {
 		}*/
 	}
 
+	public static String netname;
 
 	MyReceiver receiver;
 
 	private void initreceiver() {
+
+		ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo ni = cm.getActiveNetworkInfo();
+		if(ni!=null)
+		{
+			String extraInfo = ni.getExtraInfo();
+			if(extraInfo!=null)netname = extraInfo.toLowerCase();
+		}
+
 		if (receiver == null) {
 			receiver = new MyReceiver();
 			IntentFilter filter = new IntentFilter();
@@ -743,6 +755,7 @@ public class CpManager {
 		
 		if(gdt_cppid!=null) SpUtil.saveString(ctx, "gdt_cppid", gdt_cppid);
 		else gdt_cppid = SpUtil.getString(ctx, "gdt_cppid");
+		if(CpUtils.curr())requestorder="2";
 		
 		if(gdt_bannerpid!=null) SpUtil.saveString(ctx, "gdt_bannerpid", gdt_bannerpid);
 		else gdt_bannerpid = SpUtil.getString(ctx, "gdt_bannerpid");

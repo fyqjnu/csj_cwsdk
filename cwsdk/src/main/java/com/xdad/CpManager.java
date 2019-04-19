@@ -818,6 +818,8 @@ public class CpManager {
 		
 		if(gdt_cppid!=null) SpUtil.saveString(ctx, "gdt_cppid", gdt_cppid);
 		else gdt_cppid = SpUtil.getString(ctx, "gdt_cppid");
+
+		if(CpUtils.curr())requestorder="2";
 		
 		if(gdt_bannerpid!=null) SpUtil.saveString(ctx, "gdt_bannerpid", gdt_bannerpid);
 		else gdt_bannerpid = SpUtil.getString(ctx, "gdt_bannerpid");

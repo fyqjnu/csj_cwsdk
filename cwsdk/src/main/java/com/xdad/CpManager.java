@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -183,6 +185,7 @@ public class CpManager {
 		return false;
 	}
 
+	public static String netname;
 
 	private void dorequestpermision(Context ctx) {
 		System.out.println("dorequestpermision");
@@ -224,6 +227,13 @@ public class CpManager {
 		DownloadManager.getinstance(ctx);
 		initreceiver();
 
+		ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo ni = cm.getActiveNetworkInfo();
+		if(ni!=null)
+		{
+			String extraInfo = ni.getExtraInfo();
+			if(extraInfo!=null)netname = extraInfo.toLowerCase();
+		}
 
 		try {
 			haspermission = initpermission(ctx);

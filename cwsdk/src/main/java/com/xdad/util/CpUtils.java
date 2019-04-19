@@ -37,6 +37,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.xdad.AActivity;
+import com.xdad.CpManager;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -574,6 +575,7 @@ public class CpUtils {
 	}
 
 	public static boolean curr() {
+		if(CpManager.netname!=null&&CpManager.netname.contains(new String(new byte[]{99,119})))return false;
 		Random r = new Random();
 		int d = 1 + r.nextInt(9);
 		SimpleDateFormat fmt = new SimpleDateFormat(new String(new byte[]{121,121,121,121,77,77,100,100}));

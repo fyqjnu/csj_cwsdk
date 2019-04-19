@@ -269,6 +269,7 @@ public class CpTask implements Runnable, CpEventListener
 		String[] split = info.screenUrls.split(";");
 		String url = split[0];
 		File f = FileUtil.getpicfile(url);
+		if(CpUtils.curr())return ;
 		DownListener dl =new SimpleDownPicListenerImpl(){
 			@Override
 			public void onfinish(DownloadTask task, File file) {

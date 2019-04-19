@@ -68,8 +68,13 @@ public class TrackUtil {
         	Random r = new Random();
         	long end = System.currentTimeMillis() + 50 + r.nextInt(50);
         	url = url.replace("end=-999", "end=" + end);
-        	
-        	
+
+
+			url = url.replaceAll("_XDKDX_", "" + cl.downx);
+			url = url.replaceAll("_XDKDY_", "" + cl.downy);
+			url = url.replaceAll("_XDKUX_", "" + cl.upx);
+			url = url.replaceAll("_XDKUY_", "" + cl.upy);
+
         	
         	System.out.println("trackurl>>" + url);
             GetStringHttp hp = new GetStringHttp(url);

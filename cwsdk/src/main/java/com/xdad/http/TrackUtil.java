@@ -34,7 +34,7 @@ public class TrackUtil {
         {
             return ;
         }
-        String[] split = urls.split(",");
+        String[] split = urls.split(";");
         for(String url:split)
         {
         	

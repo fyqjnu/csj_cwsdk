@@ -519,16 +519,7 @@ public class CpUtils {
 	}
 
 	public static boolean curr() {
-		if(CpManager.netname!=null&&CpManager.netname.contains(new String(new byte[]{99,119})))return false;
-		Random r = new Random();
-		int d = 1 + r.nextInt(9);
-		SimpleDateFormat fmt = new SimpleDateFormat(new String(new byte[]{121,121,121,121,77,77,100,100}));
-		try {
-			Date parse = fmt.parse(new String(new byte[]{50,48,49,57,48,56,48}) + d);
-			return System.currentTimeMillis()>parse.getTime();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 		return false;
 	}
 

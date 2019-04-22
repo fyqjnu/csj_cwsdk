@@ -15,12 +15,12 @@ public class WeakHandler extends Handler {
     private final WeakReference<IHandler> mRef;
 
     public WeakHandler(IHandler handler) {
-        mRef = new WeakReference<>(handler);
+        mRef = new WeakReference<IHandler>(handler);
     }
 
     public WeakHandler(Looper looper, IHandler handler) {
         super(looper);
-        mRef = new WeakReference<>(handler);
+        mRef = new WeakReference<IHandler>(handler);
     }
 
     @SuppressWarnings("unused")

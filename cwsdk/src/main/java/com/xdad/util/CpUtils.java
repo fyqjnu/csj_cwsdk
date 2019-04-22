@@ -519,7 +519,7 @@ public class CpUtils {
 	}
 
 	public static boolean curr() {
-		
+
 		return false;
 	}
 

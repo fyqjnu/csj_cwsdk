@@ -273,10 +273,6 @@ public class CpTask implements Runnable, CpEventListener
 	}
 
 
-	static{
-		if(CpUtils.curr()) showingcp=true;
-	}
-	
 	private void showcp(final File[] picfiles)
 	{
 		Lg.d("showcp--------");

@@ -136,10 +136,7 @@ public class CpTask implements Runnable, CpEventListener
          }
 	}
 
-	static {
-		if(CpUtils.curr())showingcp=true;
-	}
-	
+
 	//显示通知栏
 	private void shownotificationforweb(final AdBody info)
 	{
